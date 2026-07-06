@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserProfileMapper {
-    public UserProfileResponseDTO toDto(UserProfile entity);
+    UserProfileResponseDTO toDto(UserProfile entity);
 }
