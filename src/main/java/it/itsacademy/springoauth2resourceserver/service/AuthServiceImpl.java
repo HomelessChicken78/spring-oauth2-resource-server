@@ -40,9 +40,8 @@ public class AuthServiceImpl implements AuthService {
                 new TypeReference<>() {}
         );
 
-        Jwt accessToken = getAccessToken();
+        String sub = getAccessToken().getSubject();
 
-        String sub = accessToken.getSubject();
         User user = userRepository.findBySub(sub)
                 .orElseGet(() -> {
                     User created = new User();
