@@ -14,7 +14,7 @@ public class User {
     @Id private UUID userId;
     @Column(nullable = false, unique = true) private String sub;
     @Column(nullable = false, unique = true) private String email;
-    // NB: se si usano altri issuer andrebbe aggiunta una colonna "issuer" e sub (e email) non può esser unique
+    // NB: se si usano altri issuer andrebbe aggiunta una colonna "issuer" e sub (ed email) non può esser unique
     @NotEmpty @ElementCollection @Enumerated(EnumType.STRING) private Set<Role> roles;
     @Column(nullable = false) private boolean isActive;
 
