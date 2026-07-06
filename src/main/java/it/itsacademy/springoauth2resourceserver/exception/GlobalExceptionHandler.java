@@ -21,10 +21,24 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<GeneralErrorResponseDTO> error401(UnauthorizedException err401) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new GeneralErrorResponseDTO(err401.getMessage(), 401));
+    }
+
+    @ExceptionHandler
     public ResponseEntity<GeneralErrorResponseDTO> error402(PaymentRequiredException err402) {
         return ResponseEntity
                 .status(HttpStatus.PAYMENT_REQUIRED)
                 .body(new GeneralErrorResponseDTO(err402.getMessage(), 402));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<GeneralErrorResponseDTO> error403(UnauthorizedException err403) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new GeneralErrorResponseDTO(err403.getMessage(), 403));
     }
 
     @ExceptionHandler
