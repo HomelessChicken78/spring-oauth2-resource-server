@@ -5,6 +5,7 @@ import it.itsacademy.springoauth2resourceserver.exception.*;
 import it.itsacademy.springoauth2resourceserver.model.*;
 import it.itsacademy.springoauth2resourceserver.repository.*;
 import lombok.RequiredArgsConstructor;
+import it.itsacademy.springoauth2resourceserver.mapper.UserProfileMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 public class AuthServiceImpl implements AuthService {
     private final UserProfileRepository profileRepository;
     private final UserRepository userRepository;
+    private final UserProfileMapper mapper;
 
     private Jwt getAccessToken() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -63,6 +65,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserProfileResponseDTO whoAmI() {
-        return null;
+        User found = userRepository.findBySubOrElseThrow(getAccessToken().getSubject());
+        UserProfile profileOfFound = profileRepository.findFirstByUserOrElseThrow(found);
+
+        return mapper.toDto(profileOfFound);
     }
 }
