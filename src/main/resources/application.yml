@@ -4,7 +4,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: ${HIBERNATE_DDL_AUTO}
+      ddl-auto: ${HIBERNATE_DDL_AUTO:none}
 
   security:
     oauth2:
