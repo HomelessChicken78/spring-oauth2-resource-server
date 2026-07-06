@@ -1,6 +1,7 @@
 package it.itsacademy.springoauth2resourceserver.controller;
 
 import it.itsacademy.springoauth2resourceserver.dto.UserProfileRegistrationDTO;
+import it.itsacademy.springoauth2resourceserver.dto.UserProfileResponseDTO;
 import it.itsacademy.springoauth2resourceserver.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,5 +19,10 @@ public class AuthController {
         // NB: non è la soluzione "corretta" passare l'id token al resource server. Se proprio serve il contenuto si può
         // usare OICD (eg con GET su /oauth2/userInfo)
         authService.signup(newUser, idToken);
+    }
+
+    @GetMapping(path = "/me", produces = json)
+    public UserProfileResponseDTO whoAmI() {
+        return authService.whoAmI();
     }
 }
