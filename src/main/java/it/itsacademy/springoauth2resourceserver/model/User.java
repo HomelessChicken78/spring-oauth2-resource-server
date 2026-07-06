@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter @Setter @ToString
 @Entity
 public class User {
-    @Id private UUID userId;
+    @Id @GeneratedValue(strategy = GenerationType.UUID) private UUID userId;
     @Column(nullable = false, unique = true) private String sub;
     @Column(nullable = false, unique = true) private String email;
     // NB: se si usano altri issuer andrebbe aggiunta una colonna "issuer" e sub (ed email) non può esser unique

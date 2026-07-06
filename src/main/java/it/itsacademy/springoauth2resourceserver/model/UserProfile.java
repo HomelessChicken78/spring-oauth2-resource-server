@@ -12,7 +12,7 @@ import java.util.UUID;
 @Entity
 @Audited @AuditOverride(forClass = Auditable.class)
 public class UserProfile extends Auditable {
-    @Id private UUID idProfile;
+    @Id @GeneratedValue(strategy = GenerationType.UUID) private UUID idProfile;
     @ManyToOne @JoinColumn(name = "user_id", nullable = false) private User user;
     @Column(nullable = false) private String name;
     @Column(nullable = false) private String surname;
