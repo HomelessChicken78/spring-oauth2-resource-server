@@ -1,8 +1,10 @@
 package it.itsacademy.springoauth2resourceserver.service;
 
 import it.itsacademy.springoauth2resourceserver.dto.UserProfileRegistrationDTO;
+import it.itsacademy.springoauth2resourceserver.exception.ConflictException;
 import it.itsacademy.springoauth2resourceserver.exception.UnauthorizedException;
 import it.itsacademy.springoauth2resourceserver.model.User;
+import it.itsacademy.springoauth2resourceserver.model.UserProfile;
 import it.itsacademy.springoauth2resourceserver.repository.UserProfileRepository;
 import it.itsacademy.springoauth2resourceserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +15,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Service @Transactional
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final UserProfileRepository userProfileRepository;
+    private final UserProfileRepository profileRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -34,10 +33,17 @@ public class AuthServiceImpl implements AuthService {
                     User created = new User();
                     created.setSub(sub);
                     created.setEmail(jwt.getClaimAsString("email"));
-                    userRepository.save(created);
+                    userRepository.saveAndFlush(created);
                     return created;
                 });
 
-
+        if (profileRepository.existsByUser(user)) throw new ConflictException("User has already a profile.");
+        UserProfile newProfile = new UserProfile();
+        newProfile.setUser(user);
+        newProfile.setName(jwt.getClaimAsString("given_name"));
+        newProfile.setSurname(jwt.getClaimAsString("family_name"));
+        newProfile.setAvatarUrl(newUser.getAvatarUrl());
+        newProfile.setBiografia("");
+        profileRepository.save(newProfile);
     }
 }
