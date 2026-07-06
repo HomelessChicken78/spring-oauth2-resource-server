@@ -1,12 +1,9 @@
 package it.itsacademy.springoauth2resourceserver.service;
 
-import it.itsacademy.springoauth2resourceserver.dto.UserProfileRegistrationDTO;
-import it.itsacademy.springoauth2resourceserver.exception.ConflictException;
-import it.itsacademy.springoauth2resourceserver.exception.UnauthorizedException;
-import it.itsacademy.springoauth2resourceserver.model.User;
-import it.itsacademy.springoauth2resourceserver.model.UserProfile;
-import it.itsacademy.springoauth2resourceserver.repository.UserProfileRepository;
-import it.itsacademy.springoauth2resourceserver.repository.UserRepository;
+import it.itsacademy.springoauth2resourceserver.dto.*;
+import it.itsacademy.springoauth2resourceserver.exception.*;
+import it.itsacademy.springoauth2resourceserver.model.*;
+import it.itsacademy.springoauth2resourceserver.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -26,6 +23,12 @@ public class AuthServiceImpl implements AuthService {
     private final UserProfileRepository profileRepository;
     private final UserRepository userRepository;
 
+    private Jwt getAccessToken() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) throw new UnauthorizedException(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        return (Jwt) auth.getPrincipal();
+    }
+
     @Override
     public void signup(UserProfileRegistrationDTO newUser, String idToken) {
         String[] chunks = idToken.split("\\.");
@@ -37,11 +40,9 @@ public class AuthServiceImpl implements AuthService {
                 new TypeReference<>() {}
         );
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) throw new UnauthorizedException(HttpStatus.UNAUTHORIZED.getReasonPhrase());
-        Jwt jwt = (Jwt) auth.getPrincipal();
+        Jwt accessToken = getAccessToken();
 
-        String sub = jwt.getSubject();
+        String sub = accessToken.getSubject();
         User user = userRepository.findBySub(sub)
                 .orElseGet(() -> {
                     User created = new User();
@@ -59,5 +60,10 @@ public class AuthServiceImpl implements AuthService {
         newProfile.setAvatarUrl(newUser.getAvatarUrl());
         newProfile.setBiografia("");
         profileRepository.save(newProfile);
+    }
+
+    @Override
+    public UserProfileResponseDTO whoAmI() {
+        return null;
     }
 }

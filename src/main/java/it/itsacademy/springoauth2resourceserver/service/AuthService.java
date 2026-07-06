@@ -1,7 +1,9 @@
 package it.itsacademy.springoauth2resourceserver.service;
 
-import it.itsacademy.springoauth2resourceserver.dto.UserProfileRegistrationDTO;
+import it.itsacademy.springoauth2resourceserver.dto.*;
 
 public interface AuthService {
     void signup(UserProfileRegistrationDTO newUser, String idToken);
+
+    UserProfileResponseDTO whoAmI();
 }
