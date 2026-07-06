@@ -14,6 +14,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.Base64;
+import java.util.HashMap;
 
 @Service @Transactional
 @RequiredArgsConstructor
@@ -22,7 +27,16 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
 
     @Override
-    public void signup(UserProfileRegistrationDTO newUser) {
+    public void signup(UserProfileRegistrationDTO newUser, String idToken) {
+        String[] chunks = idToken.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String payload = new String(decoder.decode(chunks[1]));
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, String> map = mapper.readValue(
+                payload,
+                new TypeReference<>() {}
+        );
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) throw new UnauthorizedException(HttpStatus.UNAUTHORIZED.getReasonPhrase());
         Jwt jwt = (Jwt) auth.getPrincipal();
@@ -32,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseGet(() -> {
                     User created = new User();
                     created.setSub(sub);
-                    created.setEmail(jwt.getClaimAsString("email"));
+                    created.setEmail(map.get("email"));
                     userRepository.saveAndFlush(created);
                     return created;
                 });
@@ -40,8 +54,8 @@ public class AuthServiceImpl implements AuthService {
         if (profileRepository.existsByUser(user)) throw new ConflictException("User has already a profile.");
         UserProfile newProfile = new UserProfile();
         newProfile.setUser(user);
-        newProfile.setName(jwt.getClaimAsString("given_name"));
-        newProfile.setSurname(jwt.getClaimAsString("family_name"));
+        newProfile.setName(map.get("name"));
+        newProfile.setSurname(map.get("family_name"));
         newProfile.setAvatarUrl(newUser.getAvatarUrl());
         newProfile.setBiografia("");
         profileRepository.save(newProfile);

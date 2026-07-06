@@ -14,7 +14,9 @@ public class AuthController {
 
     @PutMapping(path = "/signup", consumes = json)
     @ResponseStatus(HttpStatus.CREATED)
-    public void signup(UserProfileRegistrationDTO newUser) {
-        authService.signup(newUser);
+    public void signup(@RequestBody UserProfileRegistrationDTO newUser, @RequestHeader("id-token") String idToken) {
+        // NB: non è la soluzione "corretta" passare l'id token al resource server. Se proprio serve il contenuto si può
+        // usare OICD (eg con GET su /oauth2/userInfo)
+        authService.signup(newUser, idToken);
     }
 }
