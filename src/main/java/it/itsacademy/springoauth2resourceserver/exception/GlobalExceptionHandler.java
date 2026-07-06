@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<GeneralErrorResponseDTO> error403(UnauthorizedException err403) {
+    public ResponseEntity<GeneralErrorResponseDTO> error403(ForbiddenException err403) {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(new GeneralErrorResponseDTO(err403.getMessage(), 403));
