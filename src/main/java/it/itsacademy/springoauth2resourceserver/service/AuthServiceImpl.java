@@ -4,12 +4,9 @@ import it.itsacademy.springoauth2resourceserver.dto.*;
 import it.itsacademy.springoauth2resourceserver.exception.*;
 import it.itsacademy.springoauth2resourceserver.model.*;
 import it.itsacademy.springoauth2resourceserver.repository.*;
+import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import lombok.RequiredArgsConstructor;
 import it.itsacademy.springoauth2resourceserver.mapper.UserProfileMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.core.type.TypeReference;
@@ -24,12 +21,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserProfileRepository profileRepository;
     private final UserRepository userRepository;
     private final UserProfileMapper mapper;
-
-    private Jwt getAccessToken() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) throw new UnauthorizedException(HttpStatus.UNAUTHORIZED.getReasonPhrase());
-        return (Jwt) auth.getPrincipal();
-    }
+    private final CurrentUserProvider currentUser;
 
     @Override
     public void signup(UserProfileRegistrationDTO newUser, String idToken) {
@@ -42,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
                 new TypeReference<>() {}
         );
 
-        String sub = getAccessToken().getSubject();
+        String sub = currentUser.getSub();
 
         User user = userRepository.findBySub(sub)
                 .orElseGet(() -> {
@@ -65,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserProfileResponseDTO whoAmI() {
-        User found = userRepository.findBySubOrElseThrow(getAccessToken().getSubject());
+        User found = userRepository.findBySubOrElseThrow(currentUser.getSub());
         UserProfile profileOfFound = profileRepository.findFirstByUserOrElseThrow(found);
 
         return mapper.toDto(profileOfFound);
