@@ -22,7 +22,6 @@ import static org.springframework.http.HttpMethod.PUT;
 public class SecurityConfig {
     @Bean
     public Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter(UserRepository repository) {
-        System.out.println("I am inside jwtAuthenticationConverter");
         return jwt -> {
             String sub = jwt.getSubject();
 
