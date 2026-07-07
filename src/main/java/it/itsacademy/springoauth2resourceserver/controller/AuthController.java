@@ -20,9 +20,14 @@ public class AuthController {
         authService.signup(newUser);
     }
 
-    @GetMapping(path = "/me", produces = json)
+    @GetMapping(path = "/users/me", produces = json)
     public UserProfileResponseDTO whoAmI() {
         return authService.whoAmI();
+    }
+
+    @GetMapping(path = "/users/{nickname}", produces = json)
+    public UserProfileResponseDTO searchUserByNickname(@PathVariable String nickname) {
+        return authService.search(nickname);
     }
     //@PreAuthorize("hasAuthority('ROLE_MANAGER') or hasAuthority('ROLE_ADMIN')")
 }

@@ -6,4 +6,6 @@ public interface AuthService {
     void signup(UserProfileRegistrationDTO newUser);
 
     UserProfileResponseDTO whoAmI();
+
+    UserProfileResponseDTO search(String nickname);
 }

@@ -32,6 +32,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void signup(UserProfileRegistrationDTO newUser) {
+        if ("me".equals(newUser.getNickname()))
+            throw new ConflictException("\"me\" is a reserved word. Try using a different nickname");
+        if (profileRepository.existsByNickname(newUser.getNickname()))
+            throw new ConflictException("Nickname \"" + newUser.getNickname() + "\" is already in use");
+
         Map<String, String> userInfo = Optional.ofNullable(
                 restClient.get()
                         .uri(cognitoDomain + "/oauth2/userInfo")
@@ -68,5 +73,10 @@ public class AuthServiceImpl implements AuthService {
         UserProfile profileOfFound = profileRepository.findFirstByUserOrElseThrow(found);
 
         return mapper.toDto(profileOfFound);
+    }
+
+    @Override
+    public UserProfileResponseDTO search(String nickname) {
+        return mapper.toDto(profileRepository.findByNicknameOrElseThrow(nickname));
     }
 }
