@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.util.Collection;
 import java.util.List;
 
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration @EnableWebSecurity
 public class SecurityConfig {
@@ -40,6 +40,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter) throws Exception {
         return http.authorizeHttpRequests((auth) ->
                         auth.requestMatchers(PUT, "/auth/signup").authenticated()
+                        .requestMatchers(PATCH, "/auth/users/{nickname}/disable").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(PATCH, "/auth/users/{nickname}/enable").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(PUT, "/auth/users/**").hasRole("USER")
                         .anyRequest().hasAuthority("ROLE_USER")
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))

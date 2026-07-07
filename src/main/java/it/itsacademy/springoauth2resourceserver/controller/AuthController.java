@@ -6,6 +6,7 @@ import it.itsacademy.springoauth2resourceserver.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController @RequestMapping("/auth")
@@ -20,14 +21,21 @@ public class AuthController {
         authService.signup(newUser);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping(path = "/users/me", produces = json)
     public UserProfileResponseDTO whoAmI() {
         return authService.whoAmI();
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping(path = "/users/{nickname}", produces = json)
     public UserProfileResponseDTO searchUserByNickname(@PathVariable String nickname) {
         return authService.search(nickname);
     }
-    //@PreAuthorize("hasAuthority('ROLE_MANAGER') or hasAuthority('ROLE_ADMIN')")
+
+    @PreAuthorize("hasAuthority('ROLE_MANAGER') or hasAuthority('ROLE_ADMIN')")
+    @PatchMapping(path = "/users/{nickname}/disable", produces = json)
+    public void disableUser(@PathVariable String nickname) {
+
+    }
 }
