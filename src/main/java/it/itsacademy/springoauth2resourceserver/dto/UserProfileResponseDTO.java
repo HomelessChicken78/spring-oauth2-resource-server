@@ -5,5 +5,5 @@ import lombok.*;
 @AllArgsConstructor @NoArgsConstructor
 @Data
 public class UserProfileResponseDTO {
-    private String name, surname, avatarUrl, biografia;
+    private String name, surname, nickname, avatarUrl, biografia;
 }

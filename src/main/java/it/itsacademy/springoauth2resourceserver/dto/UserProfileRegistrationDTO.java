@@ -1,5 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -11,4 +12,7 @@ public class UserProfileRegistrationDTO {
             message = "Invalid URL"
     )
     private String avatarUrl;
+
+    @NotEmpty(message = "nickname is mandatory")
+    private String nickname;
 }

@@ -57,6 +57,7 @@ public class AuthServiceImpl implements AuthService {
         newProfile.setName(userInfo.get("name"));
         newProfile.setSurname(userInfo.get("family_name"));
         newProfile.setAvatarUrl(newUser.getAvatarUrl());
+        newProfile.setNickname(newUser.getNickname());
         newProfile.setBiografia("");
         profileRepository.save(newProfile);
     }

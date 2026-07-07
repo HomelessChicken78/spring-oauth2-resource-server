@@ -16,6 +16,7 @@ public class UserProfile extends Auditable {
     @ManyToOne @JoinColumn(name = "user_id", nullable = false) private User user;
     @Column(nullable = false) private String name;
     @Column(nullable = false) private String surname;
+    @Column(nullable = false, unique = true) private String nickname;
     private String avatarUrl;
     private String biografia;
 }

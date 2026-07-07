@@ -3,6 +3,7 @@ package it.itsacademy.springoauth2resourceserver.controller;
 import it.itsacademy.springoauth2resourceserver.dto.UserProfileRegistrationDTO;
 import it.itsacademy.springoauth2resourceserver.dto.UserProfileResponseDTO;
 import it.itsacademy.springoauth2resourceserver.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class AuthController {
 
     @PutMapping(path = "/signup", consumes = json)
     @ResponseStatus(HttpStatus.CREATED)
-    public void signup(@RequestBody UserProfileRegistrationDTO newUser) {
+    public void signup(@RequestBody @Valid UserProfileRegistrationDTO newUser) {
         authService.signup(newUser);
     }
 
@@ -23,4 +24,5 @@ public class AuthController {
     public UserProfileResponseDTO whoAmI() {
         return authService.whoAmI();
     }
+    //@PreAuthorize("hasAuthority('ROLE_MANAGER') or hasAuthority('ROLE_ADMIN')")
 }
