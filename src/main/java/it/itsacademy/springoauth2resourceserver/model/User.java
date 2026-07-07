@@ -15,7 +15,7 @@ public class User {
     @Column(nullable = false, unique = true) private String sub;
     @Column(nullable = false, unique = true) private String email;
     // NB: se si usano altri issuer andrebbe aggiunta una colonna "issuer" e sub (ed email) non può esser unique
-    @NotEmpty @ElementCollection @Enumerated(EnumType.STRING) private Set<Role> roles = Set.of(Role.USER);
+    @NotEmpty @ElementCollection(fetch = FetchType.EAGER) @Enumerated(EnumType.STRING) private Set<Role> roles = Set.of(Role.USER);
     @Column(nullable = false) private boolean isActive = true;
 
     public enum Role {
