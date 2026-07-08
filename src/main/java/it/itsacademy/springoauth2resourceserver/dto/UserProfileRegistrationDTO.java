@@ -13,6 +13,10 @@ public class UserProfileRegistrationDTO {
     )
     private String avatarUrl;
 
-    @NotEmpty(message = "nickname is mandatory")
+    @NotEmpty(message = "Nickname is mandatory")
+    @Pattern(
+            regexp = "^\\w{1,20}$",
+            message = "Nickname must contain only letters, numbers, or underscores, and be 1–20 characters long."
+    )
     private String nickname;
 }
