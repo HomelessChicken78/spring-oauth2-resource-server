@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+
 @RestController @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
@@ -43,5 +45,11 @@ public class AuthController {
     @PatchMapping(path = "/users/{nickname}/enable", produces = json)
     public void enableUser(@PathVariable String nickname) {
         authService.enableUser(nickname);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PatchMapping(path = "/users/{nickname}/changeUserRoles", consumes = json)
+    public void changeUserRoles(@PathVariable String nickname, @RequestBody Collection<String> roles) {
+        authService.changeUserRoles(nickname, roles);
     }
 }

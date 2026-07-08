@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service @Transactional
 @RequiredArgsConstructor
@@ -29,6 +27,12 @@ public class AuthServiceImpl implements AuthService {
     private final UserProfileMapper mapper;
     private final CurrentUserProvider currentUser;
     private final RestClient restClient;
+
+    private boolean isValidRole(String role) {
+        return role != null &&
+                Arrays.stream(User.Role.values())
+                        .anyMatch(r -> r.name().equals(role));
+    }
 
     @Override
     public void signup(UserProfileRegistrationDTO newUser) {
@@ -102,6 +106,24 @@ public class AuthServiceImpl implements AuthService {
         if (user.isActive()) throw new ConflictException("User " + nickname + " is already enabled. Nothing has changed.");
 
         user.setActive(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changeUserRoles(String nickname, Collection<String> roles) {
+        UserProfile profile = profileRepository.findByNicknameOrElseThrow(nickname);
+        User user = profile.getUser();
+
+        if (user.getSub().equals(currentUser.getSub())) throw new ConflictException("Can't change own roles.");
+        if (user.getRoles().contains(User.Role.ADMIN)) throw new ConflictException("Can't change roles of an admin.");
+        if (roles.isEmpty()) throw new ConflictException("Each user must have at least one role.");
+
+        user.setRoles(new HashSet<>());
+        for (String role : roles) {
+            if (!isValidRole(role)) throw new ConflictException("Invalid role: " + role);
+            if ("ADMIN".equals(role)) throw new ConflictException("Can't add role \"ADMIN\" to an user.");
+            user.getRoles().add(User.Role.valueOf(role));
+        }
         userRepository.save(user);
     }
 }

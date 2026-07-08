@@ -44,6 +44,7 @@ public class SecurityConfig {
                         auth.requestMatchers(PUT, "/auth/signup").authenticated()
                         .requestMatchers(PATCH, "/auth/users/{nickname}/disable").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers(PATCH, "/auth/users/{nickname}/enable").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(PATCH, "/auth/users/{nickname}/changeUserRoles").hasRole("ADMIN")
                         .requestMatchers(PUT, "/auth/users/**").hasRole("USER")
                         .anyRequest().hasAuthority("ROLE_USER")
                 )
