@@ -126,4 +126,15 @@ public class AuthServiceImpl implements AuthService {
         }
         userRepository.save(user);
     }
+
+    @Override
+    public UserProfileResponseDTO updateUserBio(String newBiography) {
+        User found = userRepository.findBySubOrElseThrow(currentUser.getSub());
+        UserProfile profileOfFound = profileRepository.findFirstByUserOrElseThrow(found);
+
+        profileOfFound.setBiografia(newBiography);
+
+        profileRepository.save(profileOfFound);
+        return mapper.toDto(profileOfFound);
+    }
 }

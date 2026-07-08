@@ -52,4 +52,10 @@ public class AuthController {
     public void changeUserRoles(@PathVariable String nickname, @RequestBody Collection<String> roles) {
         authService.changeUserRoles(nickname, roles);
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping(path = "/users/me/updateUserBio", produces = json, consumes = json)
+    public UserProfileResponseDTO updateUserBio(@RequestBody String newBiography) {
+        return authService.updateUserBio(newBiography);
+    }
 }

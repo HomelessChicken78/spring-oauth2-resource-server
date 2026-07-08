@@ -16,4 +16,6 @@ public interface AuthService {
     void enableUser(String nickname);
 
     void changeUserRoles(String nickname, Collection<String> roles);
+
+    UserProfileResponseDTO updateUserBio(String newBiography);
 }
