@@ -10,4 +10,6 @@ public interface AuthService {
     UserProfileResponseDTO search(String nickname);
 
     void disableUser(String nickname);
+
+    void enableUser(String nickname);
 }

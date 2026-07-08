@@ -92,4 +92,16 @@ public class AuthServiceImpl implements AuthService {
         user.setActive(false);
         userRepository.save(user);
     }
+
+    @Override
+    public void enableUser(String nickname) {
+        UserProfile profile = profileRepository.findByNicknameOrElseThrow(nickname);
+        User user = profile.getUser();
+
+        if (user.getSub().equals(currentUser.getSub())) throw new ConflictException("Can't enable self.");
+        if (user.isActive()) throw new ConflictException("User " + nickname + " is already enabled. Nothing has changed.");
+
+        user.setActive(true);
+        userRepository.save(user);
+    }
 }
