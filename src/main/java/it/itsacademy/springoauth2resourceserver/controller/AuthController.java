@@ -36,6 +36,6 @@ public class AuthController {
     @PreAuthorize("hasAuthority('ROLE_MANAGER') or hasAuthority('ROLE_ADMIN')")
     @PatchMapping(path = "/users/{nickname}/disable", produces = json)
     public void disableUser(@PathVariable String nickname) {
-
+        authService.disableUser(nickname);
     }
 }

@@ -1,10 +1,12 @@
 package it.itsacademy.springoauth2resourceserver.security;
 
+import it.itsacademy.springoauth2resourceserver.model.User;
 import it.itsacademy.springoauth2resourceserver.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +16,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.Collection;
-import java.util.List;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -25,12 +26,13 @@ public class SecurityConfig {
         return jwt -> {
             String sub = jwt.getSubject();
 
-            Collection<? extends GrantedAuthority> authorities = repository.findBySub(sub)
-                    .map(user -> user.getRoles().stream()
-                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                            .toList()
-                    )
-                    .orElse(List.of());
+            User user = repository.findBySubOrElseThrow(sub);
+
+            if (!user.isActive()) throw new DisabledException("User account is disabled");
+
+            Collection<? extends GrantedAuthority> authorities = user.getRoles().stream()
+                    .map(r -> new SimpleGrantedAuthority("ROLE_" + r.name()))
+                    .toList();
 
             return new JwtAuthenticationToken(jwt, authorities);
         };

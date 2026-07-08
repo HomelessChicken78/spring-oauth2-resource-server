@@ -79,4 +79,17 @@ public class AuthServiceImpl implements AuthService {
     public UserProfileResponseDTO search(String nickname) {
         return mapper.toDto(profileRepository.findByNicknameOrElseThrow(nickname));
     }
+
+    @Override
+    public void disableUser(String nickname) {
+        UserProfile profile = profileRepository.findByNicknameOrElseThrow(nickname);
+        User user = profile.getUser();
+
+        if (user.getSub().equals(currentUser.getSub())) throw new ConflictException("Can't disable self.");
+        if (!user.isActive()) throw new ConflictException("User " + nickname + " is already disabled. Nothing has changed.");
+        if (user.getRoles().contains(User.Role.ADMIN)) throw new ConflictException("Admins can't be disabled");
+
+        user.setActive(false);
+        userRepository.save(user);
+    }
 }

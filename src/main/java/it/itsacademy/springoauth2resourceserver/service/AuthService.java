@@ -8,4 +8,6 @@ public interface AuthService {
     UserProfileResponseDTO whoAmI();
 
     UserProfileResponseDTO search(String nickname);
+
+    void disableUser(String nickname);
 }
