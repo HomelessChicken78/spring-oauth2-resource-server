@@ -23,6 +23,7 @@ public interface PostMapper {
     }
 
     default String fromObjectIdToString(ObjectId objectId) {
+        if (objectId == null) return null;
         return objectId.toHexString();
     }
 }
