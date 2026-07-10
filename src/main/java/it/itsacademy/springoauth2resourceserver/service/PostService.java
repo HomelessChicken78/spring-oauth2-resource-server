@@ -8,7 +8,7 @@ import org.bson.types.ObjectId;
 import java.util.Set;
 
 public interface PostService {
-    PostResponseDTO createPost(PostCreationRequestDTO createPost);
+    PostResponseDTO createPost(PostCreationRequestDTO post);
 
     void deletePost(ObjectId idPost);
     
