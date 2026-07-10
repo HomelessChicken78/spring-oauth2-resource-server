@@ -29,10 +29,11 @@ public class PostServiceImpl implements PostService {
         response.setRelatedPosts(new HashSet<>());
 
         // Search all related posts to check if they exist and map them
-        for (ObjectId p : postToSave.getRelatedPosts())
-            response.getRelatedPosts().add(
-                    mapper.toDtoShort(postRepository.findByIdOrElseThrow(p))
-            );
+        if (post.getRelatedPosts() != null)
+            for (ObjectId p : postToSave.getRelatedPosts())
+                response.getRelatedPosts().add(
+                        mapper.toDtoShort(postRepository.findByIdOrElseThrow(p))
+                );
 
         response.setId(postRepository.save(postToSave).getId().toHexString());
         return response;
