@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Component @RequiredArgsConstructor
 public class CurrentUserProvider {
-    private UserProfileRepository profileRepository;
-    private UserRepository userRepository;
+    private final UserProfileRepository profileRepository;
+    private final UserRepository userRepository;
 
     public Jwt getJwt() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
