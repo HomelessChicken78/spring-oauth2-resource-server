@@ -73,10 +73,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserProfileResponseDTO whoAmI() {
-        User found = userRepository.findBySubOrElseThrow(currentUser.getSub());
-        UserProfile profileOfFound = profileRepository.findFirstByUserOrElseThrow(found);
-
-        return mapper.toDto(profileOfFound);
+        return mapper.toDto(currentUser.getProfile());
     }
 
     @Override
