@@ -96,7 +96,7 @@ public class PostServiceImpl implements PostService {
         return PageResponseDTO.<List<ShortPostResponseDTO>>builder()
                 .content(content)
                 .currentPage(page)
-                .pageSize(3)
+                .pageSize(pageSize)
                 .totalElements(totalElements)
                 .totalPages((int) Math.ceil((double) totalElements / pageSize))
                 .build();

@@ -4,6 +4,7 @@ import it.itsacademy.springoauth2resourceserver.dto.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.PostCreationRequestDTO;
 import it.itsacademy.springoauth2resourceserver.dto.PostResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.ShortPostResponseDTO;
+import it.itsacademy.springoauth2resourceserver.exception.BadRequestException;
 import it.itsacademy.springoauth2resourceserver.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,12 @@ import java.util.List;
 public class PostController {
     private final PostService service;
 
+    private ObjectId parseObjectId(String idPost) {
+        if (!ObjectId.isValid(idPost)) throw new BadRequestException("Invalid post id");
+
+        return new ObjectId(idPost);
+    }
+
     @PostMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
     public PostResponseDTO createPost(@RequestBody @Valid PostCreationRequestDTO post) {
@@ -30,7 +37,7 @@ public class PostController {
     @DeleteMapping("/{idPost}")
     @ResponseStatus(NO_CONTENT)
     public void deletePost(@PathVariable String idPost) {
-        service.deletePost(new ObjectId(idPost));
+        service.deletePost(parseObjectId(idPost));
     }
 
     @GetMapping("/search")
@@ -40,6 +47,6 @@ public class PostController {
 
     @GetMapping("/{idPost}")
     public PostResponseDTO findPost(@PathVariable String idPost) {
-        return service.findPost(new ObjectId(idPost));
+        return service.findPost(parseObjectId(idPost));
     }
 }
