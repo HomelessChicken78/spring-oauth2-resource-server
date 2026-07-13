@@ -37,4 +37,9 @@ public class PostController {
     public PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, @RequestParam("page") int page) {
         return service.searchPosts(title, author, topic, page);
     }
+
+    @GetMapping("/{idPost}")
+    public PostResponseDTO findPost(@PathVariable String idPost) {
+        return service.findPost(new ObjectId(idPost));
+    }
 }

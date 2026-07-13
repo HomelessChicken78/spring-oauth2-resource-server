@@ -100,7 +100,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDTO findPost(ObjectId idPost) {
-        return null;
+        Post found = postRepository.findByIdOrElseThrow(idPost);
+        PostResponseDTO response = mapper.toDto(found);
+
+        response.setRelatedPosts(mapRelatedPosts(found.getRelatedPosts()));
+
+        return response;
     }
 
     @Override
