@@ -15,9 +15,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service @Transactional
 @RequiredArgsConstructor
@@ -27,20 +26,23 @@ public class PostServiceImpl implements PostService {
     private final CurrentUserProvider currentUser;
     private final MongoTemplate mongoTemplate;
 
+    // Search all related posts to check if they exist and map them
+    private Set<ShortPostResponseDTO> mapRelatedPosts(Set<ObjectId> relatedPosts) {
+        if (relatedPosts == null || relatedPosts.isEmpty()) return new HashSet<>();
+
+        return relatedPosts.stream()
+                .map(postRepository::findByIdOrElseThrow)
+                .map(mapper::toDtoShort)
+                .collect(Collectors.toSet());
+    }
+
     @Override
     public PostResponseDTO createPost(PostCreationRequestDTO post) {
         Post postToSave = mapper.toEntity(post);
         postToSave.setAuthor(currentUser.getProfile().getNickname());
 
         PostResponseDTO response = mapper.toDto(postToSave);
-        response.setRelatedPosts(new HashSet<>());
-
-        // Search all related posts to check if they exist and map them
-        if (post.getRelatedPosts() != null)
-            for (ObjectId p : postToSave.getRelatedPosts())
-                response.getRelatedPosts().add(
-                        mapper.toDtoShort(postRepository.findByIdOrElseThrow(p))
-                );
+        response.setRelatedPosts(mapRelatedPosts(postToSave.getRelatedPosts()));
 
         response.setId(postRepository.save(postToSave).getId().toHexString());
         return response;
