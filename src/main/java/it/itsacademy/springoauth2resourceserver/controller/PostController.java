@@ -2,6 +2,7 @@ package it.itsacademy.springoauth2resourceserver.controller;
 
 import it.itsacademy.springoauth2resourceserver.dto.PostCreationRequestDTO;
 import it.itsacademy.springoauth2resourceserver.dto.PostResponseDTO;
+import it.itsacademy.springoauth2resourceserver.dto.ShortPostResponseDTO;
 import it.itsacademy.springoauth2resourceserver.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController @RequestMapping("/posts")
 @RequiredArgsConstructor
@@ -27,5 +30,10 @@ public class PostController {
     @ResponseStatus(NO_CONTENT)
     public void deletePost(@PathVariable String idPost) {
         service.deletePost(new ObjectId(idPost));
+    }
+
+    @GetMapping("/search")
+    public List<ShortPostResponseDTO> searchPosts(String title, String author, String topic, @RequestParam("page") int page) {
+        return service.searchPosts(title, author, topic, page);
     }
 }

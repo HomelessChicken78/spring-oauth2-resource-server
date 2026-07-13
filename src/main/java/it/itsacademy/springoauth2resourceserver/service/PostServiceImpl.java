@@ -8,10 +8,15 @@ import it.itsacademy.springoauth2resourceserver.repository.PostRepository;
 import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service @Transactional
@@ -20,6 +25,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final PostMapper mapper;
     private final CurrentUserProvider currentUser;
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public PostResponseDTO createPost(PostCreationRequestDTO post) {
@@ -55,8 +61,29 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Set<ShortPostResponseDTO> searchPosts(String title, String author) {
-        return Set.of();
+    public List<ShortPostResponseDTO> searchPosts(String title, String author, String topic, int page) {
+        if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
+
+        Query query = new Query();
+
+        if (title != null && !title.isBlank())
+            query.addCriteria(Criteria.where("title").is(title));
+
+        if (author != null && !author.isBlank()) {
+            if ("me".equals(author))
+                query.addCriteria(Criteria.where("author").is(currentUser.getProfile().getNickname()));
+            else
+                query.addCriteria(Criteria.where("author").is(author));
+        }
+
+        if (topic != null && !topic.isBlank())
+            query.addCriteria(Criteria.where("topic").is(topic));
+
+        query.with(PageRequest.of(page - 1, 3)); // TODO: per testing solo 3.
+
+        return mongoTemplate.find(query, Post.class)
+                .stream().map(mapper::toDtoShort)
+                .toList();
     }
 
     @Override

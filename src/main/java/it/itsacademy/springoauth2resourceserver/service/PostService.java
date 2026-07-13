@@ -5,14 +5,14 @@ import it.itsacademy.springoauth2resourceserver.dto.PostResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.ShortPostResponseDTO;
 import org.bson.types.ObjectId;
 
-import java.util.Set;
+import java.util.List;
 
 public interface PostService {
     PostResponseDTO createPost(PostCreationRequestDTO post);
 
     void deletePost(ObjectId idPost);
     
-    Set<ShortPostResponseDTO> searchPosts(String title, String author);
+    List<ShortPostResponseDTO> searchPosts(String title, String author, String topic, int page);
 
     PostResponseDTO findPost(ObjectId idPost);
 

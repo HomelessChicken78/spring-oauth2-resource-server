@@ -11,7 +11,7 @@ import java.util.Set;
 public class PostCreationRequestDTO {
     @NotBlank(message = "Title for post is mandatory.")
     @Size(max = 50, message = "Title must be at most 50 characters.")
-    @Pattern(regexp = "[\\w!?\" '-]*", message = "Invalid character(s) for title.")
+    @Pattern(regexp = "[\\w!?\" ':,.-]*", message = "Invalid character(s) for title.")
     private String title;
 
     private String content;
