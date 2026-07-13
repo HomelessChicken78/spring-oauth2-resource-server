@@ -1,8 +1,9 @@
 package it.itsacademy.springoauth2resourceserver.service;
 
 import it.itsacademy.springoauth2resourceserver.dto.*;
+import it.itsacademy.springoauth2resourceserver.exception.ConflictException;
 import it.itsacademy.springoauth2resourceserver.mapper.PostMapper;
-import it.itsacademy.springoauth2resourceserver.model.Post;
+import it.itsacademy.springoauth2resourceserver.model.*;
 import it.itsacademy.springoauth2resourceserver.repository.PostRepository;
 import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(ObjectId idPost) {
+        UserProfile requestingUser = currentUser.getProfile();
+        Post toDelete = postRepository.findByIdOrElseThrow(idPost);
 
+        Set<User.Role> roles = requestingUser.getUser().getRoles();
+        boolean isAuthor = requestingUser.getNickname().equals(toDelete.getAuthor());
+        boolean hasPrivilegedRole = roles.contains(User.Role.ADMIN) || roles.contains(User.Role.MANAGER);
+        if (!isAuthor && !hasPrivilegedRole)
+            throw new ConflictException("Only the author, an admin, or a manager can remove the post.");
+
+        postRepository.delete(toDelete);
     }
 
     @Override
