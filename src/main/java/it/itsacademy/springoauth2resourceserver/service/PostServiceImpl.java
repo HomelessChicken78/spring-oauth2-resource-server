@@ -8,6 +8,7 @@ import it.itsacademy.springoauth2resourceserver.repository.PostRepository;
 import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -25,6 +26,9 @@ public class PostServiceImpl implements PostService {
     private final PostMapper mapper;
     private final CurrentUserProvider currentUser;
     private final MongoTemplate mongoTemplate;
+
+    @Value("${PAGE_SIZE:3}")
+    private int pageSize;
 
     // Search all related posts to check if they exist and map them
     private Set<ShortPostResponseDTO> mapRelatedPosts(Set<ObjectId> relatedPosts) {
@@ -83,7 +87,7 @@ public class PostServiceImpl implements PostService {
 
         long totalElements = mongoTemplate.count(query, Post.class);
 
-        query.with(PageRequest.of(page - 1, 3)); // TODO: per testing solo 3.
+        query.with(PageRequest.of(page - 1, pageSize));
 
         List<ShortPostResponseDTO> content = mongoTemplate.find(query, Post.class)
                 .stream().map(mapper::toDtoShort)
@@ -94,7 +98,7 @@ public class PostServiceImpl implements PostService {
                 .currentPage(page)
                 .pageSize(3)
                 .totalElements(totalElements)
-                .totalPages((int) Math.ceil((double) totalElements / 3))
+                .totalPages((int) Math.ceil((double) totalElements / pageSize))
                 .build();
     }
 
