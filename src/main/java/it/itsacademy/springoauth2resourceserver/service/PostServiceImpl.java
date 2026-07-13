@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<ShortPostResponseDTO> searchPosts(String title, String author, String topic, int page) {
+    public PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, int page) {
         if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
 
         Query query = new Query();
@@ -79,11 +79,21 @@ public class PostServiceImpl implements PostService {
         if (topic != null && !topic.isBlank())
             query.addCriteria(Criteria.where("topic").is(topic));
 
+        long totalElements = mongoTemplate.count(query, Post.class);
+
         query.with(PageRequest.of(page - 1, 3)); // TODO: per testing solo 3.
 
-        return mongoTemplate.find(query, Post.class)
+        List<ShortPostResponseDTO> content = mongoTemplate.find(query, Post.class)
                 .stream().map(mapper::toDtoShort)
                 .toList();
+
+        return PageResponseDTO.<List<ShortPostResponseDTO>>builder()
+                .content(content)
+                .currentPage(page)
+                .pageSize(3)
+                .totalElements(totalElements)
+                .totalPages((int) Math.ceil((double) totalElements / 3))
+                .build();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.service;
 
+import it.itsacademy.springoauth2resourceserver.dto.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.PostCreationRequestDTO;
 import it.itsacademy.springoauth2resourceserver.dto.PostResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.ShortPostResponseDTO;
@@ -11,8 +12,8 @@ public interface PostService {
     PostResponseDTO createPost(PostCreationRequestDTO post);
 
     void deletePost(ObjectId idPost);
-    
-    List<ShortPostResponseDTO> searchPosts(String title, String author, String topic, int page);
+
+    PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, int page);
 
     PostResponseDTO findPost(ObjectId idPost);
 

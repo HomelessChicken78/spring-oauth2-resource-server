@@ -1,5 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.controller;
 
+import it.itsacademy.springoauth2resourceserver.dto.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.PostCreationRequestDTO;
 import it.itsacademy.springoauth2resourceserver.dto.PostResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.ShortPostResponseDTO;
@@ -33,7 +34,7 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public List<ShortPostResponseDTO> searchPosts(String title, String author, String topic, @RequestParam("page") int page) {
+    public PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, @RequestParam("page") int page) {
         return service.searchPosts(title, author, topic, page);
     }
 }
