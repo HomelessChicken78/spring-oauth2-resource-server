@@ -142,11 +142,25 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDTO addRelatedPost(ObjectId postId, ObjectId relatedPostId) {
-        return null;
+        Post post = postRepository.findByIdOrElseThrow(postId);
+        Post relatedPost = postRepository.findByIdOrElseThrow(relatedPostId);
+
+        if (!validateActionPrivileges(currentUser.getProfile(), post))
+            throw new ConflictException("Only the author, an admin, or a manager can perform this action.");
+
+        // TODO DOESN'T RETURN CORRECTLY THE RELATED POSTS
+        post.getRelatedPosts().add(relatedPostId);
+        return mapper.toDto(postRepository.save(post));
     }
 
     @Override
     public PostResponseDTO removeRelatedPost(ObjectId idPost, ObjectId relatedPostId) {
-        return null;
+        Post post = postRepository.findByIdOrElseThrow(idPost);
+
+        if (!post.getRelatedPosts().remove(relatedPostId))
+            throw new ConflictException("Requested related post is not a related TODO(improve this)");
+
+        // TODO DOESN'T RETURN CORRECTLY THE RELATED POSTS
+        return mapper.toDto(postRepository.save(post));
     }
 }

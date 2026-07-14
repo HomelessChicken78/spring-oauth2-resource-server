@@ -55,4 +55,14 @@ public class PostController {
     public PostResponseDTO changeTitle(@PathVariable String idPost, @RequestBody TitleChangeRequestDTO request) {
         return service.changeTitle(parseObjectId(idPost), request);
     }
+
+    @PutMapping("/{idPost}/relatedPosts/{idRelatedPost}")
+    public PostResponseDTO addRelatedPost(@PathVariable String idPost, @PathVariable String idRelatedPost) {
+        return service.addRelatedPost(parseObjectId(idPost), parseObjectId(idRelatedPost));
+    }
+
+    @DeleteMapping("/{idPost}/relatedPosts/{idRelatedPost}")
+    public PostResponseDTO removeRelatedPost(@PathVariable String idPost, @PathVariable String idRelatedPost) {
+        return service.removeRelatedPost(parseObjectId(idPost), parseObjectId(idRelatedPost));
+    }
 }
