@@ -39,7 +39,7 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, @RequestParam("page") int page) {
+    public PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, @RequestParam(defaultValue = "1") int page) {
         return service.searchPosts(title, author, topic, page);
     }
 
