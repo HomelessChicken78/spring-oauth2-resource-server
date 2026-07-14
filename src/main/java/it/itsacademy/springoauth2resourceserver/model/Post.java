@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.HashSet;
 import java.util.Set;
 
-@Document
+@Document(collection = "post")
 @AllArgsConstructor @NoArgsConstructor @Builder
 @Getter @Setter @ToString @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Post {
@@ -17,6 +17,6 @@ public class Post {
     private String title, content, topic, author;
 
     @Size(max = 7, message = "There can't be more than 7 related posts")
-    @Builder.Default
-    @ToString.Exclude private Set<ObjectId> relatedPosts = new HashSet<>();
+    @Builder.Default @ToString.Exclude
+    private Set<ObjectId> relatedPosts = new HashSet<>();
 }
