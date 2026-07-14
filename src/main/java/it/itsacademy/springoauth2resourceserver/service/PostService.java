@@ -17,7 +17,7 @@ public interface PostService {
 
     PostResponseDTO changeTitle(ObjectId idPost, TitleChangeRequestDTO request);
 
-    PostResponseDTO changeContent(ObjectId idPost, String request);
+    PostResponseDTO changeContent(ObjectId idPost, ContentChangeRequestDTO request);
 
     PostResponseDTO addRelatedPost(ObjectId postId, ObjectId relatedPostId);
 

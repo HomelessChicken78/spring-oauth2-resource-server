@@ -1,10 +1,7 @@
 package it.itsacademy.springoauth2resourceserver.service;
 
 import it.itsacademy.springoauth2resourceserver.dto.common.PageResponseDTO;
-import it.itsacademy.springoauth2resourceserver.dto.post.PostCreationRequestDTO;
-import it.itsacademy.springoauth2resourceserver.dto.post.PostResponseDTO;
-import it.itsacademy.springoauth2resourceserver.dto.post.ShortPostResponseDTO;
-import it.itsacademy.springoauth2resourceserver.dto.post.TitleChangeRequestDTO;
+import it.itsacademy.springoauth2resourceserver.dto.post.*;
 import it.itsacademy.springoauth2resourceserver.exception.ConflictException;
 import it.itsacademy.springoauth2resourceserver.mapper.PostMapper;
 import it.itsacademy.springoauth2resourceserver.model.*;
@@ -136,8 +133,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponseDTO changeContent(ObjectId idPost, String changedContent) {
-        return null;
+    public PostResponseDTO changeContent(ObjectId idPost, ContentChangeRequestDTO request) {
+        Post post = postRepository.findByIdOrElseThrow(idPost);
+
+        if (!validateActionPrivileges(currentUser.getProfile(), post))
+            throw new ConflictException("Only the author, an admin, or a manager can change the content of a post.");
+
+        post.setContent(request.getContent());
+        postRepository.save(post);
+        return mapper.toDto(post);
     }
 
     @Override
