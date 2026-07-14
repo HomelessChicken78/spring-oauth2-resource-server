@@ -127,6 +127,9 @@ public class PostServiceImpl implements PostService {
     public PostResponseDTO changeTitle(ObjectId idPost, TitleChangeRequestDTO request) {
         Post post = postRepository.findByIdOrElseThrow(idPost);
 
+        if (!validateActionPrivileges(currentUser.getProfile(), post))
+            throw new ConflictException("Only the author, an admin, or a manager can change the title of a post.");
+
         post.setTitle(request.getTitle());
         postRepository.save(post);
         return mapper.toDto(post);
