@@ -2,6 +2,7 @@ package it.itsacademy.springoauth2resourceserver.security;
 
 import it.itsacademy.springoauth2resourceserver.model.User;
 import it.itsacademy.springoauth2resourceserver.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -21,6 +22,12 @@ import static org.springframework.http.HttpMethod.*;
 
 @Configuration @EnableWebSecurity
 public class SecurityConfig {
+    @Value("${springdoc.api-docs.path}")
+    private String apiDocsPath;
+
+    @Value("${springdoc.swagger-ui.path}")
+    private String swaggerUiPath;
+
     @Bean
     public Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter(UserRepository repository) {
         return jwt -> {
@@ -41,7 +48,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter) throws Exception {
         return http.authorizeHttpRequests((auth) ->
-                        auth.requestMatchers(PUT, "/auth/signup").authenticated()
+                        auth.requestMatchers(apiDocsPath + "/**").permitAll()
+                        .requestMatchers(swaggerUiPath + "/**").permitAll()
+                        .requestMatchers(PUT, "/auth/signup").authenticated()
                         .requestMatchers(PATCH, "/auth/users/{nickname}/disable").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers(PATCH, "/auth/users/{nickname}/enable").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers(PATCH, "/auth/users/{nickname}/changeUserRoles").hasRole("ADMIN")

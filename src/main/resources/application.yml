@@ -27,4 +27,6 @@ server:
 
 springdoc:
   api-docs:
-    path: /${CONTEXT_PATH:api}/${API_DOCS_PATH:docs}
+    path: /${API_DOCS_PATH:docs}
+  swagger-ui:
+    path: /${SWAGGER_UI_PATH:swagger-ui}
