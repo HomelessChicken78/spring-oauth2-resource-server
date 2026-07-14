@@ -44,6 +44,16 @@ public class PostServiceImpl implements PostService {
                 .collect(Collectors.toSet());
     }
 
+    private boolean validateActionPrivileges(UserProfile requestingUser, Post resource) {
+        if (requestingUser == null || resource == null) return false;
+
+        Set<User.Role> roles = requestingUser.getUser().getRoles();
+        boolean isAuthor = requestingUser.getNickname().equals(resource.getAuthor());
+        boolean hasPrivilegedRole = roles.contains(User.Role.ADMIN) || roles.contains(User.Role.MANAGER);
+
+        return isAuthor || hasPrivilegedRole;
+    }
+
     @Override
     public PostResponseDTO createPost(PostCreationRequestDTO post) {
         Post postToSave = mapper.toEntity(post);
@@ -61,10 +71,7 @@ public class PostServiceImpl implements PostService {
         UserProfile requestingUser = currentUser.getProfile();
         Post toDelete = postRepository.findByIdOrElseThrow(idPost);
 
-        Set<User.Role> roles = requestingUser.getUser().getRoles();
-        boolean isAuthor = requestingUser.getNickname().equals(toDelete.getAuthor());
-        boolean hasPrivilegedRole = roles.contains(User.Role.ADMIN) || roles.contains(User.Role.MANAGER);
-        if (!isAuthor && !hasPrivilegedRole)
+        if (!validateActionPrivileges(requestingUser, toDelete))
             throw new ConflictException("Only the author, an admin, or a manager can remove the post.");
 
         postRepository.delete(toDelete);
