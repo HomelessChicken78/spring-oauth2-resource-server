@@ -56,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers(PATCH, "/auth/users/{nickname}/changeUserRoles").hasRole("ADMIN")
                         .requestMatchers(PUT, "/auth/users/**").hasRole("USER")
                         .requestMatchers("/posts/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+                        .requestMatchers("/posts/{postId}/comments/**").hasAnyRole("ADMIN", "MANAGER", "USER")
                         .anyRequest().hasAnyRole("ADMIN", "MANAGER", "USER")
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))
