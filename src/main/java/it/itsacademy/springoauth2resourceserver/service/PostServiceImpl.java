@@ -4,6 +4,7 @@ import it.itsacademy.springoauth2resourceserver.dto.common.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.post.PostCreationRequestDTO;
 import it.itsacademy.springoauth2resourceserver.dto.post.PostResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.post.ShortPostResponseDTO;
+import it.itsacademy.springoauth2resourceserver.dto.post.TitleChangeRequestDTO;
 import it.itsacademy.springoauth2resourceserver.exception.ConflictException;
 import it.itsacademy.springoauth2resourceserver.mapper.PostMapper;
 import it.itsacademy.springoauth2resourceserver.model.*;
@@ -116,13 +117,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponseDTO changeTitle(ObjectId idPost, String changedTitle) {
-        Post changedPost = postRepository.findByIdOrElseThrow(idPost);
+    public PostResponseDTO changeTitle(ObjectId idPost, TitleChangeRequestDTO request) {
+        Post post = postRepository.findByIdOrElseThrow(idPost);
 
-        // TODO bypass checks for title
-        changedPost.setTitle(changedTitle);
-        postRepository.save(changedPost);
-        return mapper.toDto(changedPost);
+        post.setTitle(request.getTitle());
+        postRepository.save(post);
+        return mapper.toDto(post);
     }
 
     @Override

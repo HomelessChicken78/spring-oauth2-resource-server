@@ -4,6 +4,7 @@ import it.itsacademy.springoauth2resourceserver.dto.common.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.post.PostCreationRequestDTO;
 import it.itsacademy.springoauth2resourceserver.dto.post.PostResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.post.ShortPostResponseDTO;
+import it.itsacademy.springoauth2resourceserver.dto.post.TitleChangeRequestDTO;
 import it.itsacademy.springoauth2resourceserver.exception.BadRequestException;
 import it.itsacademy.springoauth2resourceserver.service.PostService;
 import jakarta.validation.Valid;
@@ -48,5 +49,10 @@ public class PostController {
     @GetMapping("/{idPost}")
     public PostResponseDTO findPost(@PathVariable String idPost) {
         return service.findPost(parseObjectId(idPost));
+    }
+
+    @PatchMapping("/{idPost}/changeTitle")
+    public PostResponseDTO changeTitle(@PathVariable String idPost, @RequestBody TitleChangeRequestDTO request) {
+        return service.changeTitle(parseObjectId(idPost), request);
     }
 }
