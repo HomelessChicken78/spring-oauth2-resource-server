@@ -1,8 +1,8 @@
 package it.itsacademy.springoauth2resourceserver.mapper;
 
-import it.itsacademy.springoauth2resourceserver.dto.PostCreationRequestDTO;
-import it.itsacademy.springoauth2resourceserver.dto.PostResponseDTO;
-import it.itsacademy.springoauth2resourceserver.dto.ShortPostResponseDTO;
+import it.itsacademy.springoauth2resourceserver.dto.post.PostCreationRequestDTO;
+import it.itsacademy.springoauth2resourceserver.dto.post.PostResponseDTO;
+import it.itsacademy.springoauth2resourceserver.dto.post.ShortPostResponseDTO;
 import it.itsacademy.springoauth2resourceserver.exception.BadRequestException;
 import it.itsacademy.springoauth2resourceserver.model.Post;
 import org.bson.types.ObjectId;

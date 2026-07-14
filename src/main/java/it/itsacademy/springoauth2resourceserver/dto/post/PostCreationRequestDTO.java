@@ -1,4 +1,4 @@
-package it.itsacademy.springoauth2resourceserver.dto;
+package it.itsacademy.springoauth2resourceserver.dto.post;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -21,5 +21,6 @@ public class PostCreationRequestDTO {
     private String topic;
 
     @Size(max = 7, message = "There can't be more than 7 related posts.")
-    @ToString.Exclude private Set<String> relatedPosts = new HashSet<>();
+    @Builder.Default @ToString.Exclude
+    private Set<String> relatedPosts = new HashSet<>();
 }

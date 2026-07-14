@@ -1,7 +1,7 @@
 package it.itsacademy.springoauth2resourceserver.controller;
 
-import it.itsacademy.springoauth2resourceserver.dto.UserProfileRegistrationDTO;
-import it.itsacademy.springoauth2resourceserver.dto.UserProfileResponseDTO;
+import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileRegistrationDTO;
+import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileResponseDTO;
 import it.itsacademy.springoauth2resourceserver.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

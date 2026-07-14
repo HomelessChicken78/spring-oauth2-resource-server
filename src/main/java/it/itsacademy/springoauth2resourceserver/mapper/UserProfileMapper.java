@@ -1,6 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.mapper;
 
-import it.itsacademy.springoauth2resourceserver.dto.UserProfileResponseDTO;
+import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileResponseDTO;
 import it.itsacademy.springoauth2resourceserver.model.UserProfile;
 import org.mapstruct.Mapper;
 

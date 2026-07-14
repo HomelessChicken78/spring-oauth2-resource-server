@@ -17,5 +17,6 @@ public class Post {
     private String title, content, topic, author;
 
     @Size(max = 7, message = "There can't be more than 7 related posts")
+    @Builder.Default
     @ToString.Exclude private Set<ObjectId> relatedPosts = new HashSet<>();
 }

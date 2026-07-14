@@ -12,4 +12,6 @@ public interface PostRepository extends MongoRepository<Post, ObjectId> {
                         () -> new NotFoundException("Could not find any post with id " + id)
                 );
     }
+
+    ObjectId id(ObjectId id);
 }

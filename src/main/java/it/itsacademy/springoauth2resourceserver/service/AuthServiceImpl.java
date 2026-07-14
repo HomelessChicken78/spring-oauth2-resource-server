@@ -1,6 +1,7 @@
 package it.itsacademy.springoauth2resourceserver.service;
 
-import it.itsacademy.springoauth2resourceserver.dto.*;
+import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileRegistrationDTO;
+import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileResponseDTO;
 import it.itsacademy.springoauth2resourceserver.exception.*;
 import it.itsacademy.springoauth2resourceserver.model.*;
 import it.itsacademy.springoauth2resourceserver.repository.*;

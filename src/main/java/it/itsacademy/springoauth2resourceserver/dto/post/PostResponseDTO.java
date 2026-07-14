@@ -1,4 +1,4 @@
-package it.itsacademy.springoauth2resourceserver.dto;
+package it.itsacademy.springoauth2resourceserver.dto.post;
 
 import lombok.*;
 
