@@ -14,4 +14,8 @@ public interface PostRepository extends MongoRepository<Post, ObjectId> {
     }
 
     ObjectId id(ObjectId id);
+
+    default void existsByIdOrElseThrow(ObjectId relatedPostId) {
+        if (!existsById(relatedPostId)) throw new NotFoundException("Could not find any post with id " + relatedPostId);
+    }
 }
