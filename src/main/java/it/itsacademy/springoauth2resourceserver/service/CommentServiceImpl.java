@@ -92,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponseDTO editComment(ObjectId postId, ObjectId commentId, EditCommentRequestDTO request) {
-        Post commentPost = postRepository.findByIdOrElseThrow(postId);
+        postRepository.existsByIdOrElseThrow(postId);
         Comment comment = commentRepository.findByPostIdOrElseThrow(commentId, postId);
 
         if (!postId.equals(comment.getPostId())) throw new NotFoundException("Could not find any comment with id " + commentId + " of post " + postId);
