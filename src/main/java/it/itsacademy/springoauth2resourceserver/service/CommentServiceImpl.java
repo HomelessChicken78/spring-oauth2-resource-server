@@ -91,8 +91,18 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponseDTO editComment(ObjectId postId, EditCommentRequestDTO request) {
-        postRepository.existsByIdOrElseThrow(postId);
-        return null;
+    public CommentResponseDTO editComment(ObjectId postId, ObjectId commentId, EditCommentRequestDTO request) {
+        Post commentPost = postRepository.findByIdOrElseThrow(postId);
+        Comment comment = commentRepository.findByPostIdOrElseThrow(commentId, postId);
+
+        if (!postId.equals(comment.getPostId())) throw new NotFoundException("Could not find any comment with id " + commentId + " of post " + postId);
+
+        if (!currentUser.getProfile().getNickname().equals(comment.getAuthor()))
+            throw new ConflictException("Only the the comment author can edit a comment of the post.");
+
+        comment.setContent(request.getContent());
+        Comment saved = commentRepository.save(comment);
+
+        return mapper.toDto(saved);
     }
 }

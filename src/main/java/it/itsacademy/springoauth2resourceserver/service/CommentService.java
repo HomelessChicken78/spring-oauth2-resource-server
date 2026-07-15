@@ -13,5 +13,5 @@ public interface CommentService {
 
     void deleteComment(ObjectId postId, ObjectId commentId);
 
-    CommentResponseDTO editComment(ObjectId postId, EditCommentRequestDTO request);
+    CommentResponseDTO editComment(ObjectId postId, ObjectId commentId, EditCommentRequestDTO request);
 }

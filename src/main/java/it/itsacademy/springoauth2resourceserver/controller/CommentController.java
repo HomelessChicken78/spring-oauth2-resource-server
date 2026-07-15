@@ -44,4 +44,9 @@ public class CommentController {
     public void deleteComment(@PathVariable String postId, @PathVariable String commentId) {
         service.deleteComment(parseObjectId(postId), parseObjectId(commentId));
     }
+
+    @PatchMapping("/{commentId}")
+    public CommentResponseDTO editComment(@PathVariable String postId, @PathVariable String commentId, @RequestBody @Valid EditCommentRequestDTO request) {
+        return service.editComment(parseObjectId(postId), parseObjectId(commentId), request);
+    }
 }
