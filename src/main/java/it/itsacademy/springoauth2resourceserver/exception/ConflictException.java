@@ -1,6 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.exception;
 
-public class ConflictException extends RuntimeException {
+public class ConflictException extends HttpClientErrorException {
     public ConflictException() {
         super();
     }

@@ -1,6 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.exception;
 
-public class BadRequestException extends RuntimeException {
+public class BadRequestException extends HttpClientErrorException {
     public BadRequestException() {
         super();
     }

@@ -1,6 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.exception;
 
-public class NotFoundException extends RuntimeException {
+public class NotFoundException extends HttpClientErrorException {
     public NotFoundException() {
         super();
     }

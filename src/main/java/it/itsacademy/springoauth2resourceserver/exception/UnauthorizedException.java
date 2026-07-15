@@ -1,6 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.exception;
 
-public class UnauthorizedException extends RuntimeException {
+public class UnauthorizedException extends HttpClientErrorException {
     public UnauthorizedException(String message) {
         super(message);
     }

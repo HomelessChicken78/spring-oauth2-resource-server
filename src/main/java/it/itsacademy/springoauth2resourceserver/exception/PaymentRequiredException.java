@@ -1,6 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.exception;
 
-public class PaymentRequiredException extends RuntimeException {
+public class PaymentRequiredException extends HttpClientErrorException {
     public PaymentRequiredException() {
         super();
     }

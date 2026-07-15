@@ -1,6 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.exception;
 
-public class ForbiddenException extends RuntimeException {
+public class ForbiddenException extends HttpClientErrorException {
     public ForbiddenException(String message) {
         super(message);
     }
