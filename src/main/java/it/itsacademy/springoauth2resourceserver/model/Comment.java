@@ -20,4 +20,6 @@ public class Comment {
     @CreatedDate private LocalDateTime createdAt;
 
     @LastModifiedDate private LocalDateTime updatedAt;
+
+    private String author;
 }

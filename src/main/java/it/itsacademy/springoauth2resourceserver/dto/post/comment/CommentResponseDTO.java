@@ -9,4 +9,5 @@ import java.time.LocalDateTime;
 public class CommentResponseDTO {
     private String id, content;
     private LocalDateTime createdAt, updatedAt;
+    private String author;
 }

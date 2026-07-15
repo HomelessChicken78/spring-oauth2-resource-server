@@ -8,9 +8,11 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {ObjectIdMapper.class})
 public interface CommentMapper {
+    @Mapping(target = "author", ignore = true)
     @Mapping(target = "postId", ignore = true)
     Comment toEntity(CommentResponseDTO dto);
 
+    @Mapping(target = "author", ignore = true)
     @Mapping(target = "postId", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "id", ignore = true)
