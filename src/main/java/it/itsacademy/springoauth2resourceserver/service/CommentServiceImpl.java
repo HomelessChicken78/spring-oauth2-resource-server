@@ -2,15 +2,10 @@ package it.itsacademy.springoauth2resourceserver.service;
 
 import it.itsacademy.springoauth2resourceserver.dto.common.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.post.comment.*;
-import it.itsacademy.springoauth2resourceserver.exception.ConflictException;
-import it.itsacademy.springoauth2resourceserver.exception.NotFoundException;
+import it.itsacademy.springoauth2resourceserver.exception.*;
 import it.itsacademy.springoauth2resourceserver.mapper.CommentMapper;
-import it.itsacademy.springoauth2resourceserver.model.Comment;
-import it.itsacademy.springoauth2resourceserver.model.Post;
-import it.itsacademy.springoauth2resourceserver.model.User;
-import it.itsacademy.springoauth2resourceserver.model.UserProfile;
-import it.itsacademy.springoauth2resourceserver.repository.CommentRepository;
-import it.itsacademy.springoauth2resourceserver.repository.PostRepository;
+import it.itsacademy.springoauth2resourceserver.model.*;
+import it.itsacademy.springoauth2resourceserver.repository.*;
 import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
