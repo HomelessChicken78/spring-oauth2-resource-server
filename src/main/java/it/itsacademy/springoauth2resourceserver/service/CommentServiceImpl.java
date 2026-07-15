@@ -29,15 +29,16 @@ public class CommentServiceImpl implements CommentService {
     @Value("${PAGE_SIZE:3}")
     private int pageSize;
 
-    private boolean validateActionPrivileges(UserProfile requestingUser, Comment resource, Post commentPost) {
-        if (requestingUser == null || resource == null) return false;
+    private void validateActionPrivileges(UserProfile requestingUser, Comment resource, Post commentPost, String actionName) {
+        if (requestingUser == null || resource == null) throw new ConflictException("Requesting user and resource must not be null.");
 
         Set<User.Role> roles = requestingUser.getUser().getRoles();
         boolean isAuthor = requestingUser.getNickname().equals(resource.getAuthor());
         boolean isPostAuthor = requestingUser.getNickname().equals(commentPost.getAuthor());
         boolean hasPrivilegedRole = roles.contains(User.Role.ADMIN) || roles.contains(User.Role.MANAGER);
 
-        return isAuthor || isPostAuthor || hasPrivilegedRole;
+        if (!isAuthor && !isPostAuthor && !hasPrivilegedRole)
+            throw new ConflictException("Only the post author, the comment author, an admin, or a manager can " + actionName + " a comment of the post.");
     }
 
     @Override
@@ -78,9 +79,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findByPostIdOrElseThrow(commentId, postId);
 
         if (!postId.equals(comment.getPostId())) throw new NotFoundException("Could not find any comment with id " + commentId + " of post " + postId);
-
-        if (!validateActionPrivileges(currentUser.getProfile(), comment, commentPost))
-            throw new ConflictException("Only the post author, the comment author, an admin, or a manager can delete a comment of the post.");
+        validateActionPrivileges(currentUser.getProfile(), comment, commentPost, "delete");
 
         commentRepository.delete(comment);
     }

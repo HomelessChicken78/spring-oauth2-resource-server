@@ -41,14 +41,15 @@ public class PostServiceImpl implements PostService {
                 .collect(Collectors.toSet());
     }
 
-    private boolean validateActionPrivileges(UserProfile requestingUser, Post resource) {
-        if (requestingUser == null || resource == null) return false;
+    private void validateActionPrivileges(UserProfile requestingUser, Post resource, String actionName) {
+        if (requestingUser == null || resource == null) throw new ConflictException("Requesting user and resource must not be null.");
 
         Set<User.Role> roles = requestingUser.getUser().getRoles();
         boolean isAuthor = requestingUser.getNickname().equals(resource.getAuthor());
         boolean hasPrivilegedRole = roles.contains(User.Role.ADMIN) || roles.contains(User.Role.MANAGER);
 
-        return isAuthor || hasPrivilegedRole;
+        if (!isAuthor && !hasPrivilegedRole)
+            throw new ConflictException("Only the author, an admin, or a manager can " + actionName + " the post.");
     }
 
     @Override
@@ -68,9 +69,7 @@ public class PostServiceImpl implements PostService {
         UserProfile requestingUser = currentUser.getProfile();
         Post toDelete = postRepository.findByIdOrElseThrow(idPost);
 
-        if (!validateActionPrivileges(requestingUser, toDelete))
-            throw new ConflictException("Only the author, an admin, or a manager can remove the post.");
-
+        validateActionPrivileges(requestingUser, toDelete, "delete");
         postRepository.delete(toDelete);
     }
 
@@ -124,8 +123,7 @@ public class PostServiceImpl implements PostService {
     public PostResponseDTO changeTitle(ObjectId idPost, TitleChangeRequestDTO request) {
         Post post = postRepository.findByIdOrElseThrow(idPost);
 
-        if (!validateActionPrivileges(currentUser.getProfile(), post))
-            throw new ConflictException("Only the author, an admin, or a manager can change the title of a post.");
+        validateActionPrivileges(currentUser.getProfile(), post, "change the title of");
 
         post.setTitle(request.getTitle());
         postRepository.save(post);
@@ -135,9 +133,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDTO changeContent(ObjectId idPost, ContentChangeRequestDTO request) {
         Post post = postRepository.findByIdOrElseThrow(idPost);
-
-        if (!validateActionPrivileges(currentUser.getProfile(), post))
-            throw new ConflictException("Only the author, an admin, or a manager can change the content of a post.");
+        validateActionPrivileges(currentUser.getProfile(), post, "change the content of");
 
         post.setContent(request.getContent());
         postRepository.save(post);
@@ -150,8 +146,7 @@ public class PostServiceImpl implements PostService {
 
         postRepository.existsByIdOrElseThrow(relatedPostId);
 
-        if (!validateActionPrivileges(currentUser.getProfile(), post))
-            throw new ConflictException("Only the author, an admin, or a manager can perform this action.");
+        validateActionPrivileges(currentUser.getProfile(), post, "add a related post to");
 
         post.getRelatedPosts().add(relatedPostId);
 
