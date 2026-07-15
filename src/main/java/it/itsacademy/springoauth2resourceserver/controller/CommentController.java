@@ -38,4 +38,10 @@ public class CommentController {
     public PageResponseDTO<List<CommentResponseDTO>> getAllCommentsOfPost(@PathVariable String postId, @RequestParam(defaultValue = "1") int page) {
         return service.getAllCommentsOfPost(parseObjectId(postId), page);
     }
+
+    @DeleteMapping("/{commentId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deleteComment(@PathVariable String postId, @PathVariable String commentId) {
+        service.deleteComment(parseObjectId(postId), parseObjectId(commentId));
+    }
 }

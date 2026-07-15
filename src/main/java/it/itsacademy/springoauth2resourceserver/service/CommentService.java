@@ -11,7 +11,7 @@ public interface CommentService {
 
     PageResponseDTO<List<CommentResponseDTO>> getAllCommentsOfPost(ObjectId postId, int page);
 
-    void deleteComment(ObjectId postId, String commentId);
+    void deleteComment(ObjectId postId, ObjectId commentId);
 
     CommentResponseDTO editComment(ObjectId postId, EditCommentRequestDTO request);
 }
