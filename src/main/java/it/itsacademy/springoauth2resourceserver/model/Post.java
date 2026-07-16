@@ -3,9 +3,12 @@ package it.itsacademy.springoauth2resourceserver.model;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,4 +22,7 @@ public class Post {
     @Size(max = 7, message = "There can't be more than 7 related posts")
     @Builder.Default @ToString.Exclude
     private Set<ObjectId> relatedPosts = new HashSet<>();
+
+    @CreatedDate private LocalDateTime createdAt;
+    @LastModifiedDate private LocalDateTime updatedAt;
 }

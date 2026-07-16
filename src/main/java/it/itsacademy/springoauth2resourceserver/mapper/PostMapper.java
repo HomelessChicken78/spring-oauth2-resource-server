@@ -8,6 +8,8 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {ObjectIdMapper.class})
 public interface PostMapper {
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "author", ignore = true)
     Post toEntity(PostCreationRequestDTO dto);

@@ -57,10 +57,12 @@ public class PostServiceImpl implements PostService {
         Post postToSave = mapper.toEntity(post);
         postToSave.setAuthor(currentUser.getProfile().getNickname());
 
-        PostResponseDTO response = mapper.toDto(postToSave);
+        Post saved = postRepository.save(postToSave);
+
+        // Generate the response
+        PostResponseDTO response = mapper.toDto(saved);
         response.setRelatedPosts(mapRelatedPosts(postToSave.getRelatedPosts()));
 
-        response.setId(postRepository.save(postToSave).getId().toHexString());
         return response;
     }
 
