@@ -8,12 +8,10 @@ import java.util.Optional;
 public class AuditorAwareImpl implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
-        var ctx = SecurityContextHolder.getContext().getAuthentication();
-        if (ctx == null) return Optional.of("UNKNOWN_USER");
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        var principal = ctx.getPrincipal();
-        if (principal == null) return Optional.of("UNKNOWN_USER");
+        if (authentication == null) return Optional.of("UNKNOWN_USER");
 
-        return Optional.of(principal.toString());
+        return Optional.ofNullable(authentication.getName());
     }
 }
