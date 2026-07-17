@@ -12,6 +12,7 @@ spring:
         jwt:
           issuer-uri: ${JWT_ISSUER_URI}
 
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -19,6 +20,10 @@ spring:
 
   mongodb:
     uri: mongodb://${DB_MONGO_USERNAME}:${DB_MONGO_PASSWORD}@${DB_MONGO_HOST:localhost}:${DB_MONGO_PORT:27017}/${DB_MONGO_NAME:post}?authSource=admin
+  data:
+    redis:
+      host: {$DB_REDIS_HOST:localhost}
+      port: {$DB_REDIS_PORT:6379}
 
 server:
   servlet:
