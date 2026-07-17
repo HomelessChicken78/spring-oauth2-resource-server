@@ -10,6 +10,7 @@ import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -76,6 +77,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Cacheable(
+            value = "posts",
+            key = "{#title, #author, #topic, #page}"
+    )
+    // TODO REFACTOR THIS TO NOT CACHE "me"
     public PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, int page) {
         if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
 
