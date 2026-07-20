@@ -81,7 +81,6 @@ public class PostServiceImpl implements PostService {
             value = "posts",
             key = "{#title, #author, #topic, #page}"
     )
-    // TODO REFACTOR THIS TO NOT CACHE "me"
     public PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, int page) {
         if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
 
