@@ -10,6 +10,7 @@ import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -68,6 +69,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    // Cache is not evicted from "posts" value: for endpoint that produce collections or maps of results, the cache should be short term.
+    // Otherwise, cache becomes useless since it would always be recreated: we basically accept eventual consistency, not instant consistency
+    @CacheEvict(value = "post", key = "#idPost.toString()")
     public void deletePost(ObjectId idPost) {
         UserProfile requestingUser = currentUser.getProfile();
         Post toDelete = postRepository.findByIdOrElseThrow(idPost);
@@ -114,6 +118,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Cacheable(value = "post", key = "#idPost.toString()")
     public PostResponseDTO findPost(ObjectId idPost) {
         Post found = postRepository.findByIdOrElseThrow(idPost);
         PostResponseDTO response = mapper.toDto(found);
@@ -124,6 +129,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @CacheEvict(value = "post", key = "#idPost.toString()")
     public PostResponseDTO changeTitle(ObjectId idPost, TitleChangeRequestDTO request) {
         Post post = postRepository.findByIdOrElseThrow(idPost);
 
@@ -135,6 +141,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @CacheEvict(value = "post", key = "#idPost.toString()")
     public PostResponseDTO changeContent(ObjectId idPost, ContentChangeRequestDTO request) {
         Post post = postRepository.findByIdOrElseThrow(idPost);
         validateActionPrivileges(currentUser.getProfile(), post, "change the content of");
@@ -145,6 +152,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @CacheEvict(value = "post", key = "#postId.toString()")
     public PostResponseDTO addRelatedPost(ObjectId postId, ObjectId relatedPostId) {
         Post post = postRepository.findByIdOrElseThrow(postId);
 
@@ -163,6 +171,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @CacheEvict(value = "post", key = "#idPost.toString()")
     public PostResponseDTO removeRelatedPost(ObjectId idPost, ObjectId relatedPostId) {
         Post post = postRepository.findByIdOrElseThrow(idPost);
 

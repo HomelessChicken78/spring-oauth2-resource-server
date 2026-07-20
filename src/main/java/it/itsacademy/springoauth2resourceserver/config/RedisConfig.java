@@ -16,8 +16,11 @@ import java.time.Duration;
 @Configuration
 @EnableCaching
 public class RedisConfig {
-    @Value("${REDIS_TTL_DURATION_SECONDS:3600}")
+    @Value("${REDIS_BASE_TTL_DURATION_SECONDS:1800}")
     private Long ttlDuration;
+
+    @Value("${REDIS_POST_TTL_DURATION_SECONDS:3600}")
+    private Long postTtlDuration;
 
     @Bean
     public RedisCacheConfiguration cacheConfiguration() {
@@ -56,6 +59,8 @@ public class RedisConfig {
         return (builder) -> builder
                 .cacheDefaults(cacheConfiguration)
                 .withCacheConfiguration("posts",
-                        cacheConfiguration.entryTtl(Duration.ofMinutes(10)));
+                        cacheConfiguration.entryTtl(Duration.ofSeconds(ttlDuration)))
+                .withCacheConfiguration("post",
+                        cacheConfiguration.entryTtl(Duration.ofSeconds(postTtlDuration)));
     }
 }
