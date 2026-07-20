@@ -9,6 +9,8 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+
 import java.time.Duration;
 
 @Configuration
@@ -28,9 +30,17 @@ public class RedisConfig {
         // if you do something like (LinkedHashMap) Animal it will crash.
         // Why does the Spring ObjectMapper often fail? Because it is configured for Rest API, where you don't want to return
         // the class for security reasons (obviously).
-        // Solution: use the GenericJacksonJsonRedisSerializer builder, which creates a Redis-specific serializer
-        // configuration with the required type information so cached objects can be restored to their original classes.
-        GenericJacksonJsonRedisSerializer serializer = GenericJacksonJsonRedisSerializer.builder().build();
+        // Solution: Use GenericJacksonJsonRedisSerializer, which allow us to create a custom serializer (used by the Object Mapper to turn
+        // Objects into JSON) with enableDefaultTyping. This allows us to also add the java class to the JSON, avoiding the Redis confusion.
+
+        GenericJacksonJsonRedisSerializer serializer =
+                GenericJacksonJsonRedisSerializer.builder()
+                        .enableDefaultTyping(
+                                BasicPolymorphicTypeValidator.builder()
+                                        .allowIfBaseType(Object.class)
+                                        .build()
+                        )
+                        .build();
 
         return RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofSeconds(ttlDuration))
@@ -41,11 +51,11 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
+    public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer(
+            RedisCacheConfiguration cacheConfiguration) {
         return (builder) -> builder
-                .withCacheConfiguration("itemCache",
-                        RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(10)))
-                .withCacheConfiguration("customerCache",
-                        RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(5)));
+                .cacheDefaults(cacheConfiguration)
+                .withCacheConfiguration("posts",
+                        cacheConfiguration.entryTtl(Duration.ofMinutes(10)));
     }
 }
