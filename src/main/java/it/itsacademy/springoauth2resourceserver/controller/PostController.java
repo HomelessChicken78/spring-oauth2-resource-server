@@ -3,6 +3,7 @@ package it.itsacademy.springoauth2resourceserver.controller;
 import it.itsacademy.springoauth2resourceserver.dto.common.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.post.*;
 import it.itsacademy.springoauth2resourceserver.exception.BadRequestException;
+import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import it.itsacademy.springoauth2resourceserver.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService service;
+    private final CurrentUserProvider currentUser;
 
     private ObjectId parseObjectId(String idPost) {
         if (!ObjectId.isValid(idPost)) throw new BadRequestException("Invalid post id");
@@ -40,6 +42,7 @@ public class PostController {
 
     @GetMapping("/search")
     public PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, @RequestParam(defaultValue = "1") int page) {
+        if ("me".equals(author)) return service.searchPosts(title, currentUser.getProfile().getNickname(), topic, page);
         return service.searchPosts(title, author, topic, page);
     }
 

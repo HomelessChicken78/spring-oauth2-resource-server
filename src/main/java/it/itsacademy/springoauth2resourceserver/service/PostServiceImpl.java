@@ -91,10 +91,7 @@ public class PostServiceImpl implements PostService {
             query.addCriteria(Criteria.where("title").is(title));
 
         if (author != null && !author.isBlank()) {
-            if ("me".equals(author))
-                query.addCriteria(Criteria.where("author").is(currentUser.getProfile().getNickname()));
-            else
-                query.addCriteria(Criteria.where("author").is(author));
+            query.addCriteria(Criteria.where("author").is(author));
         }
 
         if (topic != null && !topic.isBlank())
