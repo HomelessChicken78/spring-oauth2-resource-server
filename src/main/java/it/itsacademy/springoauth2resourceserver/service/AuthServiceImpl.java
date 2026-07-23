@@ -160,7 +160,11 @@ public class AuthServiceImpl implements AuthService {
                 .follower(follower)
                 .build();
 
-        followRepository.save(follows);
+        try {
+            followRepository.saveAndFlush(follows);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new ConflictException("Already following user " + followingNickname + ".", e);
+        }
     }
 
     @Override
