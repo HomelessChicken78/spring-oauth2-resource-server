@@ -72,14 +72,14 @@ public class AuthController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping(path = "/users/{nickname}/followers")
+    @GetMapping(path = "/users/{nickname}/followers", produces = APPLICATION_JSON_VALUE)
     public PageResponseDTO<UserProfileShortResponseDTO> getFollowers(@PathVariable String nickname, @RequestParam(defaultValue = "1") int page) {
         if ("me".equals(nickname)) return authService.followersOf(currentUser.getProfile().getNickname(), page);
         return authService.followersOf(nickname, page);
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping(path = "/users/{nickname}/followings")
+    @GetMapping(path = "/users/{nickname}/followings", produces = APPLICATION_JSON_VALUE)
     public PageResponseDTO<UserProfileShortResponseDTO> getFollowings(@PathVariable String nickname, @RequestParam(defaultValue = "1") int page) {
         if ("me".equals(nickname)) return authService.followingOf(currentUser.getProfile().getNickname(), page);
         return authService.followingOf(nickname, page);
