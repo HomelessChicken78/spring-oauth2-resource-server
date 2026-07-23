@@ -30,7 +30,7 @@ public class PostServiceImpl implements PostService {
     private final CurrentUserProvider currentUser;
     private final MongoTemplate mongoTemplate;
 
-    @Value("${PAGE_SIZE:3}")
+    @Value("${POST_PAGE_SIZE:3}")
     private int pageSize;
 
     // Search all related posts to check if they exist and map them

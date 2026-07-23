@@ -26,7 +26,7 @@ public class CommentServiceImpl implements CommentService {
     private final CurrentUserProvider currentUser;
     private final CommentMapper mapper;
 
-    @Value("${PAGE_SIZE:3}")
+    @Value("${POST_PAGE_SIZE:3}")
     private int pageSize;
 
     private void validateActionPrivileges(UserProfile requestingUser, Comment resource, Post commentPost, String actionName) {
