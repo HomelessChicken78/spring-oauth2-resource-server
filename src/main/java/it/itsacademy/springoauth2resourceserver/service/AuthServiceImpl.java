@@ -188,6 +188,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void unfollow(String followingNickname) {
+        UserProfile following = profileRepository.findByNicknameOrElseThrow(followingNickname);
+        UserProfile follower = currentUser.getProfile();
 
+        Follow follows = followRepository.findByFollowerAndFollowingOrElseThrow(follower, following);
+        followRepository.delete(follows);
     }
 }
