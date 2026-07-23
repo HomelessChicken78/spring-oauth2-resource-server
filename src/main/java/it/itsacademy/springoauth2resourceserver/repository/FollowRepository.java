@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface FollowRepository extends JpaRepository<Follow, UUID> {
-    @Query("SELECT f.follower FROM Follow f WHERE f.following = :followingId")
+    @Query("SELECT f.follower FROM Follow f WHERE f.following.idProfile = :followingId")
     List<UserProfile> findFollowersByFollowing(UUID followingId);
 
-    @Query("SELECT f.following FROM Follow f WHERE f.follower = :followerId")
+    @Query("SELECT f.following FROM Follow f WHERE f.follower.idProfile = :followerId")
     List<UserProfile> findFollowingByFollower(UUID followerId);
 }
