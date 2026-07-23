@@ -65,7 +65,7 @@ public class AuthController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping(path = "/users/me/follow/{followingNickname}")
+    @PostMapping(path = "/users/me/followers/{followingNickname}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void followUser(@PathVariable String followingNickname) {
         authService.follow(followingNickname);
