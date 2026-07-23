@@ -148,7 +148,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public PageResponseDTO<UserProfileShortResponseDTO> followersOf(String nickname, int page) {
-        if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
+        if (page < 1) throw new BadRequestException("Page number must be greater or equal than one.");
 
         UserProfile following = profileRepository.findByNicknameOrElseThrow(nickname);
         Page<UserProfile> followers = followRepository.findFollowersByFollowing(following.getIdProfile(), PageRequest.of(page - 1, pageSize));
@@ -159,7 +159,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public PageResponseDTO<UserProfileShortResponseDTO> followingOf(String nickname, int page) {
-        if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
+        if (page < 1) throw new BadRequestException("Page number must be greater or equal than one.");
 
         UserProfile follower = profileRepository.findByNicknameOrElseThrow(nickname);
         Page<UserProfile> followings = followRepository.findFollowingByFollower(follower.getIdProfile(), PageRequest.of(page - 1, pageSize));

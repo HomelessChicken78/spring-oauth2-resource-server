@@ -2,6 +2,7 @@ package it.itsacademy.springoauth2resourceserver.service;
 
 import it.itsacademy.springoauth2resourceserver.dto.common.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.post.*;
+import it.itsacademy.springoauth2resourceserver.exception.BadRequestException;
 import it.itsacademy.springoauth2resourceserver.exception.ConflictException;
 import it.itsacademy.springoauth2resourceserver.mapper.PostMapper;
 import it.itsacademy.springoauth2resourceserver.model.*;
@@ -87,7 +88,7 @@ public class PostServiceImpl implements PostService {
             key = "{#title, #author, #topic, #page}"
     )
     public PageResponseDTO<ShortPostResponseDTO> searchPosts(String title, String author, String topic, int page) {
-        if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
+        if (page < 1) throw new BadRequestException("Page number must be greater or equal than one.");
 
         Query query = new Query();
 

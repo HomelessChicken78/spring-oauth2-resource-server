@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public PageResponseDTO<CommentResponseDTO> getAllCommentsOfPost(ObjectId postId, int page) {
         postRepository.existsByIdOrElseThrow(postId);
-        if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
+        if (page < 1) throw new BadRequestException("Page number must be greater or equal than one.");
 
         Page<Comment> result = commentRepository.findByPostId(postId, PageRequest.of(page - 1, pageSize,
                 Sort.by( Sort.Order.desc("createdAt"), Sort.Order.desc("id") )));
