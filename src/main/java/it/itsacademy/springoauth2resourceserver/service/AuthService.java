@@ -1,9 +1,9 @@
 package it.itsacademy.springoauth2resourceserver.service;
 
+import it.itsacademy.springoauth2resourceserver.dto.common.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.*;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface AuthService {
     void signup(UserProfileRegistrationDTO newUser);
@@ -20,9 +20,9 @@ public interface AuthService {
 
     UserProfileResponseDTO updateUserBio(String newBiography);
 
-    List<UserProfileShortResponseDTO> followersOf(String nickname);
+    PageResponseDTO<UserProfileShortResponseDTO> followersOf(String nickname, int page);
 
-    List<UserProfileShortResponseDTO> followingOf(String nickname);
+    PageResponseDTO<UserProfileShortResponseDTO> followingOf(String nickname, int page);
 
     void follow(String followingNickname);
 

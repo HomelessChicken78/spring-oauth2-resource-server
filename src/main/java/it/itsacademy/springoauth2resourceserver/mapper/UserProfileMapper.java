@@ -5,13 +5,9 @@ import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileShortRespons
 import it.itsacademy.springoauth2resourceserver.model.UserProfile;
 import org.mapstruct.Mapper;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface UserProfileMapper {
     UserProfileResponseDTO toDto(UserProfile entity);
 
     UserProfileShortResponseDTO toShortDto(UserProfile entities);
-
-    List<UserProfileShortResponseDTO> toShortDto(List<UserProfile> entities);
 }

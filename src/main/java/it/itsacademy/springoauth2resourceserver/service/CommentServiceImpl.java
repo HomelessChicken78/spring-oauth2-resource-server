@@ -65,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
         Long totalElements = result.getTotalElements();
 
         return PageResponseDTO.<List<CommentResponseDTO>>builder()
-                .content(comments)
+                .content(List.of(comments))
                 .currentPage(page)
                 .pageSize(pageSize)
                 .totalElements(totalElements)

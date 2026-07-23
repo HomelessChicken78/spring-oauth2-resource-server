@@ -1,9 +1,11 @@
 package it.itsacademy.springoauth2resourceserver.service;
 
+import it.itsacademy.springoauth2resourceserver.dto.common.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileRegistrationDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileShortResponseDTO;
 import it.itsacademy.springoauth2resourceserver.exception.*;
+import it.itsacademy.springoauth2resourceserver.mapper.PageMapper;
 import it.itsacademy.springoauth2resourceserver.model.*;
 import it.itsacademy.springoauth2resourceserver.repository.*;
 import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
@@ -11,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import it.itsacademy.springoauth2resourceserver.mapper.UserProfileMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +32,12 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
     private final UserProfileMapper mapper;
+    private final PageMapper pageMapper;
     private final CurrentUserProvider currentUser;
     private final RestClient restClient;
+
+    @Value("${USER_PAGE_SIZE:10}")
+    private int pageSize;
 
     private boolean isValidRole(String role) {
         return role != null &&
@@ -139,21 +147,25 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public List<UserProfileShortResponseDTO> followersOf(String nickname) {
-        UserProfile following = profileRepository.findByNicknameOrElseThrow(nickname);
-        List<UserProfile> followers = followRepository.findFollowersByFollowing(following.getIdProfile());
+    public PageResponseDTO<UserProfileShortResponseDTO> followersOf(String nickname, int page) {
+        if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
 
-        return mapper.toShortDto(followers);
+        UserProfile following = profileRepository.findByNicknameOrElseThrow(nickname);
+        Page<UserProfile> followers = followRepository.findFollowersByFollowing(following.getIdProfile(), PageRequest.of(page - 1, pageSize));
+        System.out.println(followers.getContent().size());
+
+        return pageMapper.toDto(followers, mapper::toShortDto);
     }
 
     @Override
-    public List<UserProfileShortResponseDTO> followingOf(String nickname) {
-        UserProfile follower = profileRepository.findByNicknameOrElseThrow(nickname);
-        List<UserProfile> followings = followRepository.findFollowingByFollower(follower.getIdProfile());
+    public PageResponseDTO<UserProfileShortResponseDTO> followingOf(String nickname, int page) {
+        if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
 
-        return mapper.toShortDto(followings);
+        UserProfile follower = profileRepository.findByNicknameOrElseThrow(nickname);
+        Page<UserProfile> followings = followRepository.findFollowingByFollower(follower.getIdProfile(), PageRequest.of(page - 1, pageSize));
+
+        return pageMapper.toDto(followings, mapper::toShortDto);
     }
-    // TODO PAGEABLE
 
     @Override
     public void follow(String followingNickname) {

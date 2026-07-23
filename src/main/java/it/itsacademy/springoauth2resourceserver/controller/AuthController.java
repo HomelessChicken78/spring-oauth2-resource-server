@@ -1,5 +1,6 @@
 package it.itsacademy.springoauth2resourceserver.controller;
 
+import it.itsacademy.springoauth2resourceserver.dto.common.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileRegistrationDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileShortResponseDTO;
@@ -12,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -73,15 +73,15 @@ public class AuthController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping(path = "/users/{nickname}/followers")
-    public List<UserProfileShortResponseDTO> getFollowers(@PathVariable String nickname) {
-        if ("me".equals(nickname)) return authService.followersOf(currentUser.getProfile().getNickname());
-        return authService.followersOf(nickname);
+    public PageResponseDTO<UserProfileShortResponseDTO> getFollowers(@PathVariable String nickname, @RequestParam(defaultValue = "1") int page) {
+        if ("me".equals(nickname)) return authService.followersOf(currentUser.getProfile().getNickname(), page);
+        return authService.followersOf(nickname, page);
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping(path = "/users/{nickname}/followings")
-    public List<UserProfileShortResponseDTO> getFollowings(@PathVariable String nickname) {
-        if ("me".equals(nickname)) return authService.followingOf(currentUser.getProfile().getNickname());
-        return authService.followingOf(nickname);
+    public PageResponseDTO<UserProfileShortResponseDTO> getFollowings(@PathVariable String nickname, @RequestParam(defaultValue = "1") int page) {
+        if ("me".equals(nickname)) return authService.followingOf(currentUser.getProfile().getNickname(), page);
+        return authService.followingOf(nickname, page);
     }
 }
