@@ -77,4 +77,11 @@ public class AuthController {
         if ("me".equals(nickname)) return authService.followersOf(currentUser.getProfile().getNickname());
         return authService.followersOf(nickname);
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(path = "/users/{nickname}/followings")
+    public List<UserProfileShortResponseDTO> getFollowings(@PathVariable String nickname) {
+        if ("me".equals(nickname)) return authService.followingOf(currentUser.getProfile().getNickname());
+        return authService.followingOf(nickname);
+    }
 }
