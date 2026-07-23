@@ -58,4 +58,11 @@ public class AuthController {
     public UserProfileResponseDTO updateUserBio(@RequestBody String newBiography) {
         return authService.updateUserBio(newBiography);
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping(path = "/users/me/follow/{followingNickname}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void followUser(@PathVariable String followingNickname) {
+        authService.follow(followingNickname);
+    }
 }

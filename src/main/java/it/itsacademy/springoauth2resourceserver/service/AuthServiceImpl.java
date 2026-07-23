@@ -2,6 +2,7 @@ package it.itsacademy.springoauth2resourceserver.service;
 
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileRegistrationDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileResponseDTO;
+import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileShortResponseDTO;
 import it.itsacademy.springoauth2resourceserver.exception.*;
 import it.itsacademy.springoauth2resourceserver.model.*;
 import it.itsacademy.springoauth2resourceserver.repository.*;
@@ -25,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserProfileRepository profileRepository;
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
     private final UserProfileMapper mapper;
     private final CurrentUserProvider currentUser;
     private final RestClient restClient;
@@ -134,5 +136,35 @@ public class AuthServiceImpl implements AuthService {
 
         profileRepository.save(profileOfFound);
         return mapper.toDto(profileOfFound);
+    }
+
+    @Override
+    public List<UserProfileShortResponseDTO> followersOf(String nickname) {
+        return List.of();
+    }
+
+    @Override
+    public List<UserProfileShortResponseDTO> followingOf(String nickname) {
+        return List.of();
+    }
+
+    @Override
+    public void follow(String followingNickname) {
+        UserProfile following = profileRepository.findByNicknameOrElseThrow(followingNickname);
+        UserProfile follower = currentUser.getProfile();
+
+        if (following.getIdProfile().equals(follower.getIdProfile())) throw new ConflictException("Can't follow oneself.");
+
+        Follow follows = Follow.builder()
+                .following(following)
+                .follower(follower)
+                .build();
+
+        followRepository.save(follows);
+    }
+
+    @Override
+    public void unfollow(String followingNickname) {
+
     }
 }
