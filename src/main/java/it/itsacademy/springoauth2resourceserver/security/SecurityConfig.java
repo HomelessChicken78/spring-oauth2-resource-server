@@ -17,6 +17,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -33,13 +35,19 @@ public class SecurityConfig {
         return jwt -> {
             String sub = jwt.getSubject();
 
-            User user = repository.findBySubOrElseThrow(sub);
+            Optional<User> optionalUser = repository.findBySub(sub);
 
-            if (!user.isActive()) throw new DisabledException("User account is disabled");
+            Collection<? extends GrantedAuthority> authorities = List.of();
 
-            Collection<? extends GrantedAuthority> authorities = user.getRoles().stream()
-                    .map(r -> new SimpleGrantedAuthority("ROLE_" + r.name()))
-                    .toList();
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+
+                if (!user.isActive()) throw new DisabledException("User account is disabled");
+
+                authorities = user.getRoles().stream()
+                        .map(r -> new SimpleGrantedAuthority("ROLE_" + r.name()))
+                        .toList();
+            }
 
             return new JwtAuthenticationToken(jwt, authorities);
         };
