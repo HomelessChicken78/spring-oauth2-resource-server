@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +58,8 @@ public class CommentServiceImpl implements CommentService {
         postRepository.existsByIdOrElseThrow(postId);
         if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
 
-        Page<Comment> result = commentRepository.findByPostId(postId, PageRequest.of(page - 1, pageSize));
+        Page<Comment> result = commentRepository.findByPostId(postId, PageRequest.of(page - 1, pageSize,
+                Sort.by( Sort.Order.desc("createdAt"), Sort.Order.desc("id") )));
         List<CommentResponseDTO> comments = result.stream()
                 .map(mapper::toDto)
                 .toList();

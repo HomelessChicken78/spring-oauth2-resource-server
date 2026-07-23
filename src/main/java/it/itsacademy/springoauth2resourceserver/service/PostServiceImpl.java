@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -102,7 +103,7 @@ public class PostServiceImpl implements PostService {
 
         long totalElements = mongoTemplate.count(query, Post.class);
 
-        query.with(PageRequest.of(page - 1, pageSize));
+        query.with(PageRequest.of(page - 1, pageSize, Sort.by(Sort.Order.desc("createdAt"), Sort.Order.desc("id"))));
 
         List<ShortPostResponseDTO> content = mongoTemplate.find(query, Post.class)
                 .stream().map(mapper::toDtoShort)
