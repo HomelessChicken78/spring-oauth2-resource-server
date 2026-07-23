@@ -14,8 +14,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
@@ -41,7 +39,7 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, @RequestParam(defaultValue = "1") int page) {
+    public PageResponseDTO<ShortPostResponseDTO> searchPosts(String title, String author, String topic, @RequestParam(defaultValue = "1") int page) {
         if ("me".equals(author)) return service.searchPosts(title, currentUser.getProfile().getNickname(), topic, page);
         return service.searchPosts(title, author, topic, page);
     }

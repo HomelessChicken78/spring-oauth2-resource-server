@@ -85,7 +85,7 @@ public class PostServiceImpl implements PostService {
             value = "posts",
             key = "{#title, #author, #topic, #page}"
     )
-    public PageResponseDTO<List<ShortPostResponseDTO>> searchPosts(String title, String author, String topic, int page) {
+    public PageResponseDTO<ShortPostResponseDTO> searchPosts(String title, String author, String topic, int page) {
         if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
 
         Query query = new Query();
@@ -108,8 +108,8 @@ public class PostServiceImpl implements PostService {
                 .stream().map(mapper::toDtoShort)
                 .toList();
 
-        return PageResponseDTO.<List<ShortPostResponseDTO>>builder()
-                .content(List.of(content))
+        return PageResponseDTO.<ShortPostResponseDTO>builder()
+                .content(content)
                 .currentPage(page)
                 .pageSize(pageSize)
                 .totalElements(totalElements)

@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public PageResponseDTO<List<CommentResponseDTO>> getAllCommentsOfPost(ObjectId postId, int page) {
+    public PageResponseDTO<CommentResponseDTO> getAllCommentsOfPost(ObjectId postId, int page) {
         postRepository.existsByIdOrElseThrow(postId);
         if (page < 1) throw new ConflictException("Page number must be greater or equal than one.");
 
@@ -64,8 +64,8 @@ public class CommentServiceImpl implements CommentService {
 
         Long totalElements = result.getTotalElements();
 
-        return PageResponseDTO.<List<CommentResponseDTO>>builder()
-                .content(List.of(comments))
+        return PageResponseDTO.<CommentResponseDTO>builder()
+                .content(comments)
                 .currentPage(page)
                 .pageSize(pageSize)
                 .totalElements(totalElements)

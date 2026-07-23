@@ -11,8 +11,6 @@ import it.itsacademy.springoauth2resourceserver.exception.BadRequestException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 import static org.springframework.http.HttpStatus.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -35,7 +33,7 @@ public class CommentController {
     }
 
     @GetMapping(params = "page", produces = APPLICATION_JSON_VALUE)
-    public PageResponseDTO<List<CommentResponseDTO>> getAllCommentsOfPost(@PathVariable String postId, @RequestParam(defaultValue = "1") int page) {
+    public PageResponseDTO<CommentResponseDTO> getAllCommentsOfPost(@PathVariable String postId, @RequestParam(defaultValue = "1") int page) {
         return service.getAllCommentsOfPost(parseObjectId(postId), page);
     }
 
