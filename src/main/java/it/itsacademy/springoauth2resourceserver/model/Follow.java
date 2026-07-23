@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -22,7 +23,7 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 )
 @AllArgsConstructor @NoArgsConstructor @Builder
 @Getter @Setter @ToString @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Audited(targetAuditMode = NOT_AUDITED)
+@Audited(targetAuditMode = NOT_AUDITED) @EntityListeners(AuditingEntityListener.class)
 public class Follow {
     @Id @GeneratedValue(strategy = GenerationType.UUID) private UUID followId;
 
