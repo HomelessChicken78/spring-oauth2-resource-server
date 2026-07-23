@@ -140,7 +140,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public List<UserProfileShortResponseDTO> followersOf(String nickname) {
-        return List.of();
+        UserProfile following = profileRepository.findByNicknameOrElseThrow(nickname);
+        List<UserProfile> followers = followRepository.findFollowersByFollowing(following.getIdProfile());
+
+        return mapper.toShortDto(followers);
     }
 
     @Override

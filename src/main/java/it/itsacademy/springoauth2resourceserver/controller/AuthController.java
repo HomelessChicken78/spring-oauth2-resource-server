@@ -2,6 +2,8 @@ package it.itsacademy.springoauth2resourceserver.controller;
 
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileRegistrationDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileResponseDTO;
+import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileShortResponseDTO;
+import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import it.itsacademy.springoauth2resourceserver.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +12,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private static final String json = "application/json";
     private final AuthService authService;
+    private final CurrentUserProvider currentUser;
 
     @PutMapping(path = "/signup", consumes = json)
     @ResponseStatus(HttpStatus.CREATED)
@@ -64,5 +68,12 @@ public class AuthController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void followUser(@PathVariable String followingNickname) {
         authService.follow(followingNickname);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(path = "/users/{nickname}/followers")
+    public List<UserProfileShortResponseDTO> getFollowers(@PathVariable String nickname) {
+        if ("me".equals(nickname)) return authService.followersOf(currentUser.getProfile().getNickname());
+        return authService.followersOf(nickname);
     }
 }
