@@ -14,51 +14,52 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.List;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private static final String json = "application/json";
     private final AuthService authService;
     private final CurrentUserProvider currentUser;
 
-    @PutMapping(path = "/signup", consumes = json)
+    @PutMapping(path = "/signup", consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void signup(@RequestBody @Valid UserProfileRegistrationDTO newUser) {
         authService.signup(newUser);
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping(path = "/users/me", produces = json)
+    @GetMapping(path = "/users/me", produces = APPLICATION_JSON_VALUE)
     public UserProfileResponseDTO whoAmI() {
         return authService.whoAmI();
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping(path = "/users/{nickname}", produces = json)
+    @GetMapping(path = "/users/{nickname}", produces = APPLICATION_JSON_VALUE)
     public UserProfileResponseDTO searchUserByNickname(@PathVariable String nickname) {
         return authService.search(nickname);
     }
 
     @PreAuthorize("hasAuthority('ROLE_MANAGER') or hasAuthority('ROLE_ADMIN')")
-    @PatchMapping(path = "/users/{nickname}/disable", produces = json)
+    @PatchMapping(path = "/users/{nickname}/disable", produces = APPLICATION_JSON_VALUE)
     public void disableUser(@PathVariable String nickname) {
         authService.disableUser(nickname);
     }
 
     @PreAuthorize("hasAuthority('ROLE_MANAGER') or hasAuthority('ROLE_ADMIN')")
-    @PatchMapping(path = "/users/{nickname}/enable", produces = json)
+    @PatchMapping(path = "/users/{nickname}/enable", produces = APPLICATION_JSON_VALUE)
     public void enableUser(@PathVariable String nickname) {
         authService.enableUser(nickname);
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PatchMapping(path = "/users/{nickname}/changeUserRoles", consumes = json)
+    @PatchMapping(path = "/users/{nickname}/changeUserRoles", consumes = APPLICATION_JSON_VALUE)
     public void changeUserRoles(@PathVariable String nickname, @RequestBody Collection<String> roles) {
         authService.changeUserRoles(nickname, roles);
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PutMapping(path = "/users/me/updateUserBio", produces = json, consumes = json)
+    @PutMapping(path = "/users/me/updateUserBio", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public UserProfileResponseDTO updateUserBio(@RequestBody String newBiography) {
         return authService.updateUserBio(newBiography);
     }
