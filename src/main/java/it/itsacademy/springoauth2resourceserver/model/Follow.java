@@ -20,7 +20,7 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
                 constraint = "follower_id <> following_id"
         )
 )
-@AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor @NoArgsConstructor @Builder
 @Getter @Setter @ToString @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Audited(targetAuditMode = NOT_AUDITED)
 public class Follow {
