@@ -184,6 +184,12 @@ public class AuthServiceImpl implements AuthService {
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             throw new ConflictException("Already following user " + followingNickname + ".", e);
         }
+
+        following.setFollowers(following.getFollowers() + 1);
+        profileRepository.save(following);
+
+        follower.setFollowings(follower.getFollowings() + 1);
+        profileRepository.save(follower);
     }
 
     @Override
@@ -193,5 +199,11 @@ public class AuthServiceImpl implements AuthService {
 
         Follow follows = followRepository.findByFollowerAndFollowingOrElseThrow(follower, following);
         followRepository.delete(follows);
+
+        following.setFollowers(following.getFollowers() - 1);
+        profileRepository.save(following);
+
+        follower.setFollowings(follower.getFollowings() - 1);
+        profileRepository.save(follower);
     }
 }

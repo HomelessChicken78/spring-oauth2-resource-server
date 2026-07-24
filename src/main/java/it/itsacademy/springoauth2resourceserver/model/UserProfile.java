@@ -19,4 +19,6 @@ public class UserProfile extends Auditable {
     @Column(nullable = false, unique = true) private String nickname;
     private String avatarUrl;
     private String biografia;
+    private Integer followers;
+    private Integer followings;
 }

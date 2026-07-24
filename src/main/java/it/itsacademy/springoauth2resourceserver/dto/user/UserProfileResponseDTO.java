@@ -6,4 +6,5 @@ import lombok.*;
 @Data
 public class UserProfileResponseDTO {
     private String name, surname, nickname, avatarUrl, biografia;
+    private Integer followers, followings;
 }

@@ -9,4 +9,5 @@ import java.util.UUID;
 public class UserProfileShortResponseDTO {
     private UUID idProfile;
     private String nickname, avatarUrl;
+    private Integer followers;
 }
