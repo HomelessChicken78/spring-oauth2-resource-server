@@ -11,10 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -90,5 +92,11 @@ public class AuthController {
     public PageResponseDTO<UserProfileShortResponseDTO> getFollowings(@PathVariable String nickname, @RequestParam(defaultValue = "1") int page) {
         if ("me".equals(nickname)) return authService.followingOf(currentUser.getProfile().getNickname(), page);
         return authService.followingOf(nickname, page);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping(path = "/users/me/avatarUrl", consumes = MULTIPART_FORM_DATA_VALUE)
+    public void uploadAvatarUrl(@RequestPart MultipartFile image) {
+        authService.uploadAvatarUrl(image);
     }
 }

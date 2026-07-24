@@ -2,6 +2,7 @@ package it.itsacademy.springoauth2resourceserver.service;
 
 import it.itsacademy.springoauth2resourceserver.dto.common.PageResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 
@@ -27,4 +28,6 @@ public interface AuthService {
     void follow(String followingNickname);
 
     void unfollow(String followingNickname);
+
+    void uploadAvatarUrl(MultipartFile image);
 }
