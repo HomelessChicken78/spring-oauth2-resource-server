@@ -28,6 +28,4 @@ public interface AuthService {
     void follow(String followingNickname);
 
     void unfollow(String followingNickname);
-
-    void uploadAvatarUrl(MultipartFile image);
 }

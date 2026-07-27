@@ -29,9 +29,6 @@ public class AuthServiceImpl implements AuthService {
     @Value("${COGNITO_DOMAIN}")
     private String cognitoDomain;
 
-    @Value("#{'${AVATAR_IMAGE_FORMATS:image/jpg}'.split(',')}")
-    private List<String> avatarImageFormats;
-
     private final UserProfileRepository profileRepository;
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
@@ -42,12 +39,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${USER_PAGE_SIZE:10}")
     private int pageSize;
-
-    @Value("${S3_BUCKET_NAME}")
-    private String bucketS3;
-
-    @Value("${S3_ROOT_PREFIX}")
-    private String rootPrefix;
 
     private boolean isValidRole(String role) {
         return role != null &&
@@ -215,9 +206,5 @@ public class AuthServiceImpl implements AuthService {
 
         follower.setFollowings(follower.getFollowings() - 1);
         profileRepository.save(follower);
-    }
-
-    @Override
-    public void uploadAvatarUrl(MultipartFile image) {
     }
 }

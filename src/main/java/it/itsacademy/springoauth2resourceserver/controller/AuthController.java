@@ -6,6 +6,7 @@ import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileResponseDTO;
 import it.itsacademy.springoauth2resourceserver.dto.user.UserProfileShortResponseDTO;
 import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import it.itsacademy.springoauth2resourceserver.service.AuthService;
+import it.itsacademy.springoauth2resourceserver.service.AvatarPictureService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final AvatarPictureService pfpService;
     private final CurrentUserProvider currentUser;
 
     @PutMapping(path = "/signup", consumes = APPLICATION_JSON_VALUE)
@@ -97,6 +99,6 @@ public class AuthController {
     @PreAuthorize("hasRole('USER')")
     @PutMapping(path = "/users/me/avatarUrl", consumes = MULTIPART_FORM_DATA_VALUE)
     public void uploadAvatarUrl(@RequestPart MultipartFile image) {
-        authService.uploadAvatarUrl(image);
+        pfpService.uploadAvatarUrl(image);
     }
 }
