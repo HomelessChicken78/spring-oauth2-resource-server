@@ -60,8 +60,10 @@ public class AvatarPictureServiceImpl implements AvatarPictureService {
 
     @Override
     public void uploadAvatarUrl(MultipartFile image) {
-        if (!isValidFileMimeType(image, avatarImageFormats)) throw new BadRequestException("File is empty or MIME type not supported.");
-        if (!isFileSizeValid(image, maxImageSize)) throw new BadRequestException("File size must be less than " + humanReadableBytes(maxImageSize) + ".");
+        if (!isValidFileMimeType(image, avatarImageFormats))
+            throw new BadRequestException("File is empty or MIME type not supported. Expected MIME type(s): " + String.join(", ", avatarImageFormats) + ".");
+        if (!isFileSizeValid(image, maxImageSize))
+            throw new BadRequestException("File size must be less than " + humanReadableBytes(maxImageSize) + ".");
 
 
     }
