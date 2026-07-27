@@ -57,6 +57,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<GeneralErrorResponseDTO> error413(ContentTooLargeException err413) {
+        return ResponseEntity
+                .status(HttpStatus.CONTENT_TOO_LARGE)
+                .body(new GeneralErrorResponseDTO(err413.getMessage(), 413));
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ValidationErrorResponseDTO> errorValidationHandler(MethodArgumentNotValidException exceptionRaised) {
         ValidationErrorResponseDTO responseDTO = new ValidationErrorResponseDTO(
                 exceptionRaised.getFieldErrors()
