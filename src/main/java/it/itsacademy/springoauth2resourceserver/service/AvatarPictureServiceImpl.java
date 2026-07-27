@@ -1,6 +1,7 @@
 package it.itsacademy.springoauth2resourceserver.service;
 
 import it.itsacademy.springoauth2resourceserver.exception.BadRequestException;
+import it.itsacademy.springoauth2resourceserver.exception.ContentTooLargeException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +64,7 @@ public class AvatarPictureServiceImpl implements AvatarPictureService {
         if (!isValidFileMimeType(image, avatarImageFormats))
             throw new BadRequestException("File is empty or MIME type not supported. Expected MIME type(s): " + String.join(", ", avatarImageFormats) + ".");
         if (!isFileSizeValid(image, maxImageSize))
-            throw new BadRequestException("File size must be less than " + humanReadableBytes(maxImageSize) + ".");
+            throw new ContentTooLargeException("File size must be less than " + humanReadableBytes(maxImageSize) + ".");
 
 
     }
