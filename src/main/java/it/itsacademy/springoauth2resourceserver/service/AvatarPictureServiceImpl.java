@@ -4,6 +4,9 @@ import it.itsacademy.springoauth2resourceserver.exception.*;
 import it.itsacademy.springoauth2resourceserver.security.CurrentUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
+import org.apache.tika.mime.MimeType;
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,14 +79,22 @@ public class AvatarPictureServiceImpl implements AvatarPictureService {
 
         try {
             byte[] fileBytes = image.getBytes();
-            final String extension = tika.detect(fileBytes);
-            final String s3ObjectKey = rootPrefix + currentUser.getProfile().getNickname() + "/" + image.getOriginalFilename() + getFilenameExtension(extension);
 
-            s3Client.putObject(b -> b.bucket(bucketS3).key(s3ObjectKey).contentType(extension).build(),
+            String extension;
+            final String detectedMime = tika.detect(fileBytes);
+            try {
+                MimeType mimeType = MimeTypes.getDefaultMimeTypes().forName(detectedMime);
+                extension = mimeType.getExtension();
+            } catch (MimeTypeException e) {
+                extension = ".bin";
+            }
+            final String s3ObjectKey = rootPrefix + currentUser.getProfile().getNickname() + "/avatar-picture-" + currentUser.getProfile().getNickname().toLowerCase() + "." + getFilenameExtension(extension);
+
+            s3Client.putObject(b -> b.bucket(bucketS3).key(s3ObjectKey).contentType(detectedMime).build(),
                     AsyncRequestBody.fromBytes(fileBytes)).join();
 
             final String imageUrl = s3Utilities.getUrl(GetUrlRequest.builder().bucket(bucketS3).key(s3ObjectKey).build()).toString();
-            currentUser.getProfile().setAvatarUrl(imageUrl);
+            currentUser.getProfile().setAvatarUrl(imageUrl); // would be better to save the object key
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
