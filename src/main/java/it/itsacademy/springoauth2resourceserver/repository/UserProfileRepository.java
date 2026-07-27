@@ -30,4 +30,11 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, UUID> 
     }
 
     boolean existsByNickname(String nickname);
+
+    default UserProfile findByIdOrElseThrow(UUID id) {
+        return findById(id)
+                .orElseThrow(
+                        () -> new NotFoundException("Could not find any user with id " + id)
+                );
+    }
 }
