@@ -1,4 +1,4 @@
-package it.itsacademy.springoauth2resourceserver.config;
+package it.itsacademy.springoauth2resourceserver.config.aws;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
