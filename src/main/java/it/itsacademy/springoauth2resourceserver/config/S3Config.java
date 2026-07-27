@@ -7,6 +7,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.services.s3.S3Utilities;
 
 import java.time.Duration;
 
@@ -27,6 +28,13 @@ public class S3Config {
                 .region(Region.of(awsRegion))
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(awsAccessKeyId, awsAccessKeySecret)))
                 .overrideConfiguration(b -> b.apiCallTimeout(Duration.ofMinutes(2)))
+                .build();
+    }
+
+    @Bean
+    public S3Utilities s3Utilities() {
+        return S3Utilities.builder()
+                .region(Region.of(awsRegion))
                 .build();
     }
 }
