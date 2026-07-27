@@ -117,9 +117,14 @@
             <version>2.34.0</version>
         </dependency>
         <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-starter-sqs</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
-            <version>2.9.2</version>
+            <version>3.2.2</version>
         </dependency>
     </dependencies>
 
