@@ -88,7 +88,7 @@ public class AvatarPictureServiceImpl implements AvatarPictureService {
             } catch (MimeTypeException e) {
                 extension = ".bin";
             }
-            final String s3ObjectKey = rootPrefix + currentUser.getProfile().getNickname() + "/avatar-picture-" + currentUser.getProfile().getNickname().toLowerCase() + "." + getFilenameExtension(extension);
+            final String s3ObjectKey = rootPrefix + currentUser.getProfile().getNickname() + "/avatar-picture-" + currentUser.getProfile().getIdProfile() + "." + getFilenameExtension(extension);
 
             s3Client.putObject(b -> b.bucket(bucketS3).key(s3ObjectKey).contentType(detectedMime).build(),
                     AsyncRequestBody.fromBytes(fileBytes)).join();
