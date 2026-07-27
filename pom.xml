@@ -119,7 +119,7 @@
         <dependency>
             <groupId>io.awspring.cloud</groupId>
             <artifactId>spring-cloud-aws-starter-sqs</artifactId>
-            <version>3.1.1</version>
+            <version>4.0.2</version>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
