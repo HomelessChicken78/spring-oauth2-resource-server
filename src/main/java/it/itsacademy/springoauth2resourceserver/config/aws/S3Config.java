@@ -27,11 +27,4 @@ public class S3Config {
                 .overrideConfiguration(b -> b.apiCallTimeout(Duration.ofMinutes(2)))
                 .build();
     }
-
-    @Bean
-    public S3Utilities s3Utilities() {
-        return S3Utilities.builder()
-                .region(Region.of(awsRegion))
-                .build();
-    }
 }

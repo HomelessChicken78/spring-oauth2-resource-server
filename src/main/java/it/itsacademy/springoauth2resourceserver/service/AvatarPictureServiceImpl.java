@@ -14,8 +14,6 @@ import static org.springframework.util.StringUtils.getFilenameExtension;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
-import software.amazon.awssdk.services.s3.S3Utilities;
-import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +36,6 @@ public class AvatarPictureServiceImpl implements AvatarPictureService {
 
     private final Tika tika = new Tika();
     private final S3AsyncClient s3Client;
-    private final S3Utilities s3Utilities;
     private final CurrentUserProvider currentUser;
 
     private boolean isValidFileMimeType(MultipartFile file, List<String> allowedFormats) {
@@ -93,8 +90,7 @@ public class AvatarPictureServiceImpl implements AvatarPictureService {
             s3Client.putObject(b -> b.bucket(bucketS3).key(s3ObjectKey).contentType(detectedMime).build(),
                     AsyncRequestBody.fromBytes(fileBytes)).join();
 
-            final String imageUrl = s3Utilities.getUrl(GetUrlRequest.builder().bucket(bucketS3).key(s3ObjectKey).build()).toString();
-            currentUser.getProfile().setAvatarUrl(imageUrl); // would be better to save the object key
+            currentUser.getProfile().setAvatarUrl(s3ObjectKey);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
