@@ -98,7 +98,7 @@ public class AuthController {
 
     @PreAuthorize("hasRole('USER')")
     @PutMapping(path = "/users/me/avatarUrl", consumes = MULTIPART_FORM_DATA_VALUE)
-    public void uploadAvatarUrl(@RequestPart MultipartFile image) {
+    public void uploadAvatarUrl(@RequestPart("image") MultipartFile image) {
         pfpService.uploadAvatarUrl(image);
     }
 }
